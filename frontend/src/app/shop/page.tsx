@@ -2,8 +2,6 @@ import axios from 'axios'
 
 export default async function shop() {
 
-  
-
   const products = await axios.get('http://127.0.0.1:8000/product_links_api/')
   console.log(products)
 
@@ -20,6 +18,8 @@ export default async function shop() {
                       {ele.product_name}
                       <br></br>
                       {ele.product_platform}
+                      <br></br>
+                      {ele.product_link}
                     </div>
 
                 )

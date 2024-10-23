@@ -128,21 +128,6 @@ const List = () => {
             </Card>
           </div>
         </ScrollArea>
-
-        {/* <div className=" w-full bg-[#85e3b8] border-solid border-white border-2 mx-4 my-4 p-5 flex flex-col justify-between overflow-y-auto max-h-[]">
-          <div className="flex flex-row justify-between items-center h-[45%]">
-            <div className="border border-[red] w-[20%] h-[100%]"></div>
-            <div className="border border-[red] w-[20%] h-[100%]"></div>
-            <div className="border border-[red] w-[20%] h-[100%]"></div>
-            <div className="border border-[red] w-[20%] h-[100%]"></div>
-          </div>
-          <div className="flex flex-row justify-between items-center h-[45%]">
-            <div className="border border-[red] w-[20%] h-[100%]"></div>
-            <div className="border border-[red] w-[20%] h-[100%]"></div>
-            <div className="border border-[red] w-[20%] h-[100%]"></div>
-            <div className="border border-[red] w-[20%] h-[100%]"></div>
-          </div>
-        </div> */}
       </section>
     </>
   );
