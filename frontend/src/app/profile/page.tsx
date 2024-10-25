@@ -1,7 +1,9 @@
 "use client"
-
+import axios from "axios";
 import React , { useState } from "react";
 import * as Components from '@/components/LoginForm';
+import Cookies from 'js-cookie'
+
 
 export default function Profile() 
 {
@@ -40,7 +42,7 @@ export default function Profile()
 
         try{
 
-            const response = await fetch("http://127.0.0.1:8000/signup" , {
+            const response = await fetch("http://127.0.0.1:8000/api/v1/signup" , {
                 method : "POST",    
                 headers: {
                     "Content-Type" : "application/json",
@@ -54,6 +56,7 @@ export default function Profile()
                 alert("SignUp Failed");
             }else{
                 const result = await response.json();
+                
                 console.log("sign up successful : ",result);
                 alert("SignUp Successfull");
             }
@@ -69,7 +72,7 @@ export default function Profile()
         
         try{
 
-            const response = await fetch("http://127.0.0.1:8000/login" , {
+            const response = await fetch("http://127.0.0.1:8000/api/v1/token/" , {
                 method : "POST",
                 headers : {
                     "Content-Type" : "application/json",
@@ -83,6 +86,8 @@ export default function Profile()
                 alert("Sign In error");
             }else{
                 const result = await response.json();
+                Cookies.set('access',result.access)
+                Cookies.set('refresh',result.refresh)
                 console.log("Sign In successfull" ,  result);
                 alert("SignIn successfull");
             }

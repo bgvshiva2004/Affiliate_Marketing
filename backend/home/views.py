@@ -1,24 +1,56 @@
 from django.shortcuts import render,HttpResponse
 from django.contrib.auth.models import User
 from rest_framework import status
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView , ListCreateAPIView
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from .models import *
 from .serializers import * 
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
+from rest_framework_simplejwt.views import TokenRefreshView
+from datetime import datetime
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from .serializers import CustomTokenRefreshSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
+
 
 # Create your views here.
-
 class ProductLinksAPI(ListAPIView):
-    queryset = ProductLinks.objects.all()
     serializer_class = ProductLinksSerializers
 
+    def get_queryset(self):
+        queryset = ProductLinks.objects.all()
+        product_id = self.request.query_params.get('id', None)
+        product_name = self.request.query_params.get('product_name', None)
+        min_price = self.request.query_params.get('min_price', None)
+        max_price = self.request.query_params.get('max_price', None)
 
-class UserListsAPI(ListAPIView):
+        if product_id:
+            queryset = queryset.filter(id=product_id)
+
+        if product_name:
+            queryset = queryset.filter(product_name__icontains=product_name)
+
+        if min_price or max_price:
+            price_filters = Q()
+            if min_price:
+                price_filters &= Q(product_price__gte=min_price)
+            if max_price:
+                price_filters &= Q(product_price__lte=max_price)
+            queryset = queryset.filter(price_filters)
+
+        return queryset
+
+class UserListsAPI(ListCreateAPIView):
     queryset = UserLists.objects.all()
     serializer_class = UserListsSerializer
+
+    def perform_create(self , serializer):
+        serializer.save()
 
 
 @api_view(['POST'])
@@ -54,3 +86,15 @@ def login(request):
 
 def index(request):
     return HttpResponse("Index page")
+        
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CustomTokenRefreshSerializer
