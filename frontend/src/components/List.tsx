@@ -38,18 +38,8 @@ const List = () => {
                 <p>Card Footer</p>
               </CardFooter>
             </Card>
-            <Card className="w-[20%]">
-              <CardHeader>
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Card Content</p>
-              </CardContent>
-              <CardFooter>
-                <p>Card Footer</p>
-              </CardFooter>
-            </Card>
+            
+            
             <Card className="w-[20%]">
               <CardHeader>
                 <CardTitle>Card Title</CardTitle>
