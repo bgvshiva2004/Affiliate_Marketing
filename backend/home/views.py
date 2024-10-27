@@ -21,8 +21,10 @@ from .serializers import CustomTokenObtainPairSerializer
 # Create your views here.
 class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
-
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
+        print(self.request.user)
         queryset = ProductLinks.objects.all()
         product_id = self.request.query_params.get('id', None)
         product_name = self.request.query_params.get('product_name', None)

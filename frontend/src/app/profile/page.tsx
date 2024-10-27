@@ -3,10 +3,11 @@ import axios from "axios";
 import React , { useState } from "react";
 import * as Components from '@/components/LoginForm';
 import Cookies from 'js-cookie'
-
-
+import { jwtDecode } from "jwt-decode";
+import { useRouter } from 'next/navigation'
 export default function Profile() 
 {
+    const router = useRouter()
 
     const [signIn , setSignIn ] = useState<boolean>(true); 
 
@@ -88,8 +89,10 @@ export default function Profile()
                 const result = await response.json();
                 Cookies.set('access',result.access)
                 Cookies.set('refresh',result.refresh)
+                const userDetails = jwtDecode(result.access);
+                Cookies.set('user',JSON.stringify(userDetails))
                 console.log("Sign In successfull" ,  result);
-                alert("SignIn successfull");
+                router.push('/')
             }
 
         }catch(error){
