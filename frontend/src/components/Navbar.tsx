@@ -7,28 +7,24 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      console.log("scroll y : ",window.scrollY);
       if(window.scrollY > 0){
         setScrolled(true);
-        // console.log("here : ",scrolled)
-      }else{
+      } else {
         setScrolled(false);
       }
     };
 
     handleScroll();
 
-    window.addEventListener('scroll',handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener('scroll',handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
-  } , []);
-  
+  }, []);
+
   return (
-    <nav className={`sticky top-0 flex flex-row bg-white items-center md:border-b-2 px-6 py-4 justify-between text-black z-10 transition-colors duration-200 ease-in  ${
-      scrolled ? '!bg-[#0bc772] !text-[white]' : 'bg-[white] text-[black]'
-    }`}>
+    <nav className={`sticky z-[100000000000] top-0 flex flex-row items-center px-6 py-4 justify-between text-black transition-colors duration-200 ease-in bg-white font-bold ${scrolled ? "bg-[#5badd2]":"bg-white"}`}>
       <div className="flex flex-row justify-between items-center space-x-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -46,23 +42,7 @@ export default function Navbar() {
         </svg>
         <p className="text-md cursor-pointer">Aone</p>
       </div>
-      {/* <div className="bg-[#0BC772] flex flex-row justify-between px-2 py-1 rounded-md w-[7rem] items-center cursor-pointer">
-        <h1>Save it!</h1>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-          />
-        </svg>
-      </div> */}
+
       <div className="flex flex-row space-x-6">
         <div className="md:hidden">
           <svg
@@ -80,7 +60,7 @@ export default function Navbar() {
             />
           </svg>
         </div>
-        <div className="hidden md:flex md:flex-row md:items-center md:justify-center md:space-x-1 cursor-pointer">
+        <div className="!hidden md:!flex md:flex-row md:items-center md:justify-center md:space-x-1 cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -97,7 +77,7 @@ export default function Navbar() {
           </svg>
           <p>Shop</p>
         </div>
-        <div className="hidden md:flex md:flex-row md:items-center md:justify-center md:space-x-1 cursor-pointer">
+        <div className="!hidden md:!flex md:flex-row md:items-center md:justify-center md:space-x-1 cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -113,39 +93,6 @@ export default function Navbar() {
             />
           </svg>
           <p>List</p>
-        </div>
-        <div className="hidden md:flex md:flex-row md:items-center md:justify-center md:space-x-1 cursor-pointer">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="size-6"
-            strokeWidth={1.5}
-          >
-            <path d="m7.5 4.27 9 5.15" />
-            <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-            <path d="m3.3 7 8.7 5 8.7-5" />
-            <path d="M12 22V12" />
-          </svg>
-          <p>Product</p>
-        </div>
-        <div className="hidden md:flex md:flex-row md:items-center md:justify-center md:space-x-1 cursor-pointer">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-            />
-          </svg>
-          <p>Profile</p>
         </div>
       </div>
     </nav>
