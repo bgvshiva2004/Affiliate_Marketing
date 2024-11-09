@@ -103,21 +103,21 @@ export default function Profile()
     };
 
     return(
-        <div className="w-screen pt-24 flex justify-center items-center">
+        <div className="w-screen h-screen pt-10 flex justify-center items-center">
          <Components.Container>
              <Components.SignUpContainer signinIn={signIn}>
                  <Components.Form onSubmit={handleSignUpSubmit}>
                     <Components.Title>Create Account</Components.Title>
                     <Components.Input 
                         type='text'
-                        placeholder='username'
+                        placeholder='Username'
                         name = "username"
                         value = {signUpData.username}
                         onChange={handleSignUpChange}
                     />
                     <Components.Input 
                         type='password'
-                        placeholder='Password'
+                        placeholder='Password'     
                         name = "password"
                         value = {signUpData.password}
                         onChange={handleSignUpChange}
@@ -131,7 +131,7 @@ export default function Profile()
                     <Components.Title>Sign in</Components.Title>
                     <Components.Input 
                         type='text'
-                        placeholder='username'
+                        placeholder='Username'
                         name = "username"
                         value = {signInData.username}
                         onChange={handleSignInChange} 

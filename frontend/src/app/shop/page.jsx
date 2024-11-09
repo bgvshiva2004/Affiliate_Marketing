@@ -16,7 +16,7 @@ export default async function shop() {
               {products.map((ele,ind)=>{
 
                 return (
-
+                  
                     <div key={ind}>
                       {ele.product_name}
                       <br></br>

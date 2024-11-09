@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { Menu, X, ShoppingCart, List, User,Search } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { Menu, X, ShoppingCart, List, User, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Sheet,
   SheetContent,
@@ -10,9 +12,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import Link from "next/link"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,11 +28,18 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const isHomePage = pathname === "/"
+  const navBackground = isHomePage && !scrolled
+    ? 'bg-transparent'
+    : 'bg-white/80 backdrop-blur-md shadow-md'
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+  }
+
   return (
     <nav
-      className={`fixed w-full z-50 top-0 transition-all duration-300  ${
-        scrolled ? 'bg-white/80 backdrop-blur-md shadow-md' : 'bg-transparent'
-      }`}
+      className={`fixed w-full z-50 top-0 transition-all duration-300 ${navBackground}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4 md:justify-start md:space-x-10">
@@ -77,25 +89,62 @@ export default function Navbar() {
             </Sheet>
           </div>
           <nav className="hidden md:flex space-x-10">
-          <a href="#" className="text-base font-medium text-gray-500 hover:text-primary">
+            <a href="/" className="text-base font-medium text-gray-500 hover:text-primary">
               Home
             </a>
-            <a href="#" className="text-base font-medium text-gray-500 hover:text-primary">
+            <a href="/" className="text-base font-medium text-gray-500 hover:text-primary">
               Shop
             </a>
-            <a href="#" className="text-base font-medium text-gray-500 hover:text-primary">
+            <a href="/" className="text-base font-medium text-gray-500 hover:text-primary">
               List
             </a>
           </nav>
-          <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <Button variant="ghost" size="icon" className="text-primary">
-              <Search  className="h-6 w-6" />
-              <span className="sr-only">Shopping cart</span>
-            </Button>
+          <div className="flex items-center border-0 justify-end md:flex-1 lg:w-0 rounded-l-full rounded-r-full">
+            <div className="relative flex items-center">
+              <div className={`absolute right-0 flex items-center transition-all duration-300 ${isSearchOpen
+                ? 'w-64 opacity-100 -translate-x-10'
+                : 'w-0 opacity-0'
+                }`}>
+                <form onSubmit={handleSearch} className="flex w-full items-center rounded-l-full rounded-r-full bg-[#E9E9E9]">
+                  <Input
+                    type="search"
+                    placeholder="Search..."
+                    className={`border-0 focus-visible:ring-0  rounded-l-md ${isSearchOpen ? 'w-full pl-4 ' : 'w-0'
+                      }`}
+                    disabled={!isSearchOpen}
+                  />
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 rounded-r-full "
+                  >
+                    <Search className={`h-4 w-4 rounded-full`} />
+                    {/* <span className="sr-only">Submit search</span> */}
+                  </Button>
+                </form>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-primary relative z-10"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                aria-label={isSearchOpen ? 'Close search' : 'Open search'}
+              >
+                {isSearchOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Search className="h-6 w-6" />
+                )}
+              </Button>
+            </div>
+
             <Button variant="ghost" size="icon" className="text-primary ml-4">
-              <User className="h-6 w-6" />
-              <span className="sr-only">User account</span>
+              <Link href="/profile">
+                <User className="h-6 w-6" />
+              </Link>
             </Button>
+
           </div>
         </div>
       </div>
