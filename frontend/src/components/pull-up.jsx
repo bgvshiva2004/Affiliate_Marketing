@@ -132,10 +132,10 @@ function ProductCard({ product }) {
 
 export default function ShoppingSpot() {
   const [isOpen, setIsOpen] = useState(false);
-  const drawerRef = useRef<HTMLDivElement>(null);
+  const drawerRef = useRef(null);
   const drawerThreshold = 100; // Minimum drag distance to open
 
-  const handleDrag = (event: React.MouseEvent | React.TouchEvent) => {
+  const handleDrag = (event) => {
     const { clientY } = event instanceof MouseEvent ? event : event.touches[0];
     const drawer = drawerRef.current;
 

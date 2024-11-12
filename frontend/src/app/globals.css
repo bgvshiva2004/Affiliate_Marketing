@@ -105,3 +105,18 @@ body {
   margin: -20px 0 50px;
 } */
 
+#background {
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  filter: blur(2px) brightness(0.75);
+  -webkit-filter: blur(2px) brightness(0.75);
+  -moz-filter: blur(2px) brightness(0.75);
+  -ms-filter: blur(2px) brightness(0.75);
+  -o-filter: blur(2px) brightness(0.75);
+  position: absolute;
+  z-index: 1;
+}
