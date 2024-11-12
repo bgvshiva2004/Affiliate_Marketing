@@ -19,6 +19,21 @@ const categories = [
 			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
 			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
 			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
+			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
+			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
+			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
+			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
+			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
+			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
+			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
+			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
+			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
 		],
 	},
 	{
@@ -81,7 +96,7 @@ export default function SearchPage() {
 	return (
 		<div className="">
 			
-			<div id="searchpage" className=" h-[90vh] mx-auto  px-4 py-8 border-0 border-red-500 ">
+			<div id="searchpage" className=" h-[70vh] mx-auto  px-4 py-8 border-0 border-red-500 ">
 				<div className="flex flex-col  mb-8 ">
 					<h1 className="text-3xl font-bold">Our Products</h1>
 					<div className="flex items-center space-x-4 ">

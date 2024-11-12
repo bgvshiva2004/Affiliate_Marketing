@@ -2,7 +2,7 @@ import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 
 
-export function ProductCard({ title, price, imageUrl, companyName, platform }) {
+export default function ProductCard({ title, price, imageUrl, companyName, platform }) {
   return (
     <Card className="w-[200px] h-[320px] flex flex-col">
       <div className="relative w-full h-[150px]">
