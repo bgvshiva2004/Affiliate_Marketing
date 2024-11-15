@@ -16,12 +16,16 @@ export default function Profile()
     useEffect(() => {
         async function checkUserStatus(){
           try{
-            const response = await fetch('/api/authCheck');
-            const data = await response.json();
-            console.log(data.isLoggedIn);
-            setIsLoggedIn(data.isLoggedIn);
-            if(data.isLoggedIn){
-              setUser(data.user);
+            const token = Cookies.get('access')
+            if(!token){
+                setIsLoggedIn(false)
+            }else{
+                setIsLoggedIn(true)
+                const userCookie = Cookies.get('user')
+                if(userCookie){
+                    const userDetails = JSON.parse(userCookie)
+                    setUser(userDetails)
+                }
             }
           }catch(error){
             console.error("Error checking user status:", error);

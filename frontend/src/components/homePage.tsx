@@ -13,35 +13,35 @@ import 'react-toastify/dist/ReactToastify.css'
 import ProductsPage from '@/app/@products/ProductsPage'
 import { motion, useAnimation } from 'framer-motion'
 
-
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
+
+interface ListItem {
+  id?: number;
+  title : string ;
+  description : string;
+}
 
 
 export default function Component() {
 
-  const [isLoggedIn , setIsLoggedIn ] = useState(null)
-  const [user , setUser] = useState(null)
+  const [isLoggedIn , setIsLoggedIn ] = useState<boolean | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [isListVisible, setIsListVisible] = useState<boolean>(false)
+  const [newItem, setNewItem] = useState<ListItem>({ title: 'Sample Title', description: 'Sample Description' })
+  const [listItems, setListItems] = useState<ListItem[]>([])
+  const [editingItem, setEditingItem] = useState<ListItem | null>(null)
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isListVisible, setIsListVisible] = useState(false)
-  const [newItem, setNewItem] = useState({ title: 'Sample Title', description: 'Sample Description' })
-  const [listItems, setListItems] = useState([])
-  const [editingItem, setEditingItem] = useState(null)
-
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const controls = useAnimation()
 
   const router = useRouter()
 
-  const [ token , setToken ] = useState(null);
+  const token = Cookies.get('access');
+  // console.log("token : ",token)
+  // if(!token) throw new Error('No token found');
 
-  useEffect(()=>{
-    const storedToken = localStorage.getItem('token');
-    setToken(storedToken);
-  },[]);
-
-  const handleDragEnd = (event, info) => {
+  const handleDragEnd = (event : any, info : any) => {
     if (info.offset.y < -50) {
       setIsOpen(true)
       controls.start({ height: '80vh' })
@@ -56,41 +56,9 @@ export default function Component() {
     controls.start({ height: isOpen ? '0px' : '80vh' })
   }
 
-  // const handleAddItem = () => {
-  //   const title = newItem.title.trim()
-  //   const description = newItem.description.trim() || 'No description provided'
-
-  //   if (!title) {
-  //     toast.error('Title is required')
-  //     return
-  //   }
-
-  //   if (editingItem) {
-  //     setListItems(listItems.map(item =>
-  //       item.id === editingItem.id ? { ...item, title, description } : item
-  //     ))
-  //     setEditingItem(null)
-  //     toast.success('Item updated successfully')
-  //   } else {
-  //     setListItems([...listItems, { id: Date.now(), title, description }])
-  //     toast.success('Item added successfully')
-  //   }
-
-  //   setNewItem({ title: 'Sample Title', description: 'Sample Description' })
-  //   setIsModalOpen(false)
-  // }
-
-  const saveListItem = async (item) => {
+  const saveListItem = async (item : ListItem) : Promise<ListItem> => {
     try{
-      console.log("hello3")
-      const token = Cookies.get('token');
-      console.log("hello4")
-      console.log("token : ",token)
-      if(!token) throw new Error('No token found');
-
-      console.log("hi")
-      console.log("token : ",token)
-
+      // console.log("item : ",item)
       const response = await fetch('http://127.0.0.1:8000/api/v1/lists/',{
         method : 'POST',
         headers: {
@@ -110,11 +78,8 @@ export default function Component() {
     }
   }
 
-  const fetchUserLists = async () => {
+  const fetchUserLists = async () : Promise<ListItem[]> => {
     try{
-
-      const token = Cookies.get('token');
-      if(!token) throw new Error('No token found');
 
       const response = await fetch('http://127.0.0.1:8000/api/v1/lists/',{
         method : 'GET',
@@ -143,13 +108,11 @@ export default function Component() {
     try {
       if (editingItem) {
         const updatedItem = { ...editingItem, title, description };
-        console.log("hello")
         await saveListItem(updatedItem);
         setListItems(listItems.map(item => item.id === editingItem.id ? updatedItem : item));
         setEditingItem(null);
         toast.success('Item updated successfully');
       } else {
-        console.log("hello2")
         const newItemData = await saveListItem({ title, description });
         setListItems([...listItems, newItemData]);
         toast.success('Item added successfully');
@@ -163,22 +126,41 @@ export default function Component() {
   };
   
 
-  const handleRemoveItem = (id) => {
-    setListItems(listItems.filter(item => item.id !== id))
-    toast.info('Item removed')
+  const handleRemoveItem = async (id : number) => {
+    try{
+      const token = Cookies.get('access');
+      if(!token) throw new Error('No token found');
+
+      const response = await fetch(`http://127.0.0.1:8000/api/v1/lists/${id}/` , {
+        method : 'DELETE',
+        headers : {
+          'Authorization' : `Bearer ${token}`,
+        },
+      });
+
+      if(!response.ok) throw new Error('Failed to delete the list');
+
+      setListItems(listItems.filter(item => item.id !== id))
+      toast.info('Item removed')
+
+    }catch(error){
+      console.error('Error deleting list item:', error);
+      toast.error('Failed to remove the item');
+    }
   }
 
-  const handleEditItem = (item) => {
+  const handleEditItem = (item : ListItem) => {
+    // console.log("edit item : ",item)
     setEditingItem(item)
     setNewItem({ title: item.title, description: item.description })
     setIsModalOpen(true)
   }
 
-  const handleNewItemChange = (field, value) => {
+  const handleNewItemChange = (field : keyof ListItem, value : string) => {
     setNewItem(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleContentChange = (id, field, value) => {
+  const handleContentChange = (id : number, field : keyof ListItem, value : string) => {
     setListItems(listItems.map(item =>
       item.id === id
         ? { ...item, [field]: value }
@@ -201,12 +183,10 @@ export default function Component() {
   useEffect(() => {
     async function checkUserStatus(){
       try{
-        const response = await fetch('/api/authCheck');
-        const data = await response.json();
-        console.log(data.isLoggedIn);
-        setIsLoggedIn(data.isLoggedIn);
-        if(data.isLoggedIn){
-          setUser(data.user);
+        if(!token){
+          setIsLoggedIn(false);
+        }else{
+          setIsLoggedIn(true);
         }
       }catch(error){
         console.error("Error checking user status:", error);
