@@ -56,12 +56,40 @@ export default function Component() {
     controls.start({ height: isOpen ? '0px' : '80vh' })
   }
 
+  // const handleAddItem = () => {
+  //   const title = newItem.title.trim()
+  //   const description = newItem.description.trim() || 'No description provided'
+
+  //   if (!title) {
+  //     toast.error('Title is required')
+  //     return
+  //   }
+
+  //   if (editingItem) {
+  //     setListItems(listItems.map(item =>
+  //       item.id === editingItem.id ? { ...item, title, description } : item
+  //     ))
+  //     setEditingItem(null)
+  //     toast.success('Item updated successfully')
+  //   } else {
+  //     setListItems([...listItems, { id: Date.now(), title, description }])
+  //     toast.success('Item added successfully')
+  //   }
+
+  //   setNewItem({ title: 'Sample Title', description: 'Sample Description' })
+  //   setIsModalOpen(false)
+  // }
+
   const saveListItem = async (item) => {
     try{
-      // console.log("item : ",item)
-      const token = Cookies.get('access');
-      // console.log("token : ",token)
+      console.log("hello3")
+      const token = Cookies.get('token');
+      console.log("hello4")
+      console.log("token : ",token)
       if(!token) throw new Error('No token found');
+
+      console.log("hi")
+      console.log("token : ",token)
 
       const response = await fetch('http://127.0.0.1:8000/api/v1/lists/',{
         method : 'POST',
@@ -85,7 +113,7 @@ export default function Component() {
   const fetchUserLists = async () => {
     try{
 
-      const token = Cookies.get('access');
+      const token = Cookies.get('token');
       if(!token) throw new Error('No token found');
 
       const response = await fetch('http://127.0.0.1:8000/api/v1/lists/',{
@@ -115,11 +143,13 @@ export default function Component() {
     try {
       if (editingItem) {
         const updatedItem = { ...editingItem, title, description };
+        console.log("hello")
         await saveListItem(updatedItem);
         setListItems(listItems.map(item => item.id === editingItem.id ? updatedItem : item));
         setEditingItem(null);
         toast.success('Item updated successfully');
       } else {
+        console.log("hello2")
         const newItemData = await saveListItem({ title, description });
         setListItems([...listItems, newItemData]);
         toast.success('Item added successfully');
@@ -133,31 +163,12 @@ export default function Component() {
   };
   
 
-  const handleRemoveItem = async (id) => {
-    try{
-      const token = Cookies.get('access');
-      if(!token) throw new Error('No token found');
-
-      const response = await fetch(`http://127.0.0.1:8000/api/v1/lists/${id}/` , {
-        method : 'DELETE',
-        headers : {
-          'Authorization' : `Bearer ${token}`,
-        },
-      });
-
-      if(!response.ok) throw new Error('Failed to delete the list');
-
-      setListItems(listItems.filter(item => item.id !== id))
-      toast.info('Item removed')
-
-    }catch(error){
-      console.error('Error deleting list item:', error);
-      toast.error('Failed to remove the item');
-    }
+  const handleRemoveItem = (id) => {
+    setListItems(listItems.filter(item => item.id !== id))
+    toast.info('Item removed')
   }
 
   const handleEditItem = (item) => {
-    // console.log("edit item : ",item)
     setEditingItem(item)
     setNewItem({ title: item.title, description: item.description })
     setIsModalOpen(true)

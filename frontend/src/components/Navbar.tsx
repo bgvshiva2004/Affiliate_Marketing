@@ -100,7 +100,7 @@ export default function Navbar() {
                   </SheetClose>
                   <SheetClose asChild>
                     <Link href="/shop" className="text-base font-medium text-gray-900 hover:text-primary">
-                      Shop
+                      Products
                     </Link>
                   </SheetClose>
                   <SheetClose asChild>
@@ -122,7 +122,7 @@ export default function Navbar() {
               Home
             </Link>
             <Link href="/shop" className="text-base font-medium text-gray-500 hover:text-primary">
-              Shop
+              Products
             </Link>
             <Link href="/list" className="text-base font-medium text-gray-500 hover:text-primary">
               List
@@ -166,12 +166,12 @@ export default function Navbar() {
                 )}
               </Button>
             </div>
-            <Button variant="ghost" size="icon" className="text-primary ml-4">
-              <Link href="/profile">
-                <User className="h-6 w-6" />
-                <span className="sr-only">User profile</span>
-              </Link>
-            </Button>
+            <Link href="/profile">
+              <Button variant="ghost" size="icon" className="text-primary ml-4">
+                  <User className="h-6 w-6" />
+                  <span className="sr-only">User profile</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

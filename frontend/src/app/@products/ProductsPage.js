@@ -58,7 +58,7 @@ const categories = [
 	},
 ]
 
-export default function SearchPage() {
+export default function ProductsPage() {
 	const [searchTerm, setSearchTerm] = useState("")
 	const [selectedCategories, setSelectedCategories] = useState([])
 	const [minPrice, setMinPrice] = useState("")
@@ -96,7 +96,7 @@ export default function SearchPage() {
 	return (
 		<div className="">
 			
-			<div id="searchpage" className=" h-[70vh] mx-auto  px-4 py-8 border-0 border-red-500 ">
+			<div id="ProductsPage" className=" h-[70vh] mx-auto  px-4 py-8 border-0 border-red-500 ">
 				<div className="flex flex-col  mb-8 ">
 					<h1 className="text-3xl font-bold">Our Products</h1>
 					<div className="flex items-center space-x-4 ">

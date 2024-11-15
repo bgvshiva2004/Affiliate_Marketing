@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 
 export default async function shop() {
   const cookieStore = await cookies()
-  const token = cookieStore?.get('access').value
+  const token = cookieStore?.get('access')?.value;
   const products = await getAllProducts(token)
   console.log(products)
 
@@ -35,3 +35,13 @@ export default async function shop() {
     </div>
   )
 }
+
+// import ProductsPage from "../@products/ProductsPage"
+
+// export default function page() {
+//   return (
+//     <div>
+//       <ProductsPage/>
+//     </div>
+//   )
+// }

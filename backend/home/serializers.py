@@ -20,6 +20,7 @@ class UserListsSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = UserLists
         fields = "__all__"
+        read_only_fields = ['user']
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
