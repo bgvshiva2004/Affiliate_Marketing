@@ -16,16 +16,25 @@ import { motion, useAnimation } from 'framer-motion'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
 
+// import dynamic from 'next/dynamic'
+
 interface ListItem {
   id?: number;
   title : string ;
   description : string;
 }
 
+interface HomePageProps {
+  initialToken?: string | null
+}
 
-export default function Component() {
-
+export default function HomePage({initialToken} : HomePageProps){
   const [isLoggedIn , setIsLoggedIn ] = useState<boolean | null>(null)
+// }
+
+// export default function Component() {
+
+  
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [isListVisible, setIsListVisible] = useState<boolean>(false)
   const [newItem, setNewItem] = useState<ListItem>({ title: 'Sample Title', description: 'Sample Description' })
@@ -38,8 +47,38 @@ export default function Component() {
   const router = useRouter()
 
   const token = Cookies.get('access');
-  // console.log("token : ",token)
+  console.log("token : ",token)
+  console.log("initialToken : ",initialToken)
   // if(!token) throw new Error('No token found');
+
+  useEffect(() => {
+
+    if(initialToken){
+      console.log("initialToken : ",initialToken) 
+      Cookies.set('access' , initialToken, {
+        path : '/',
+        // secure: process.env.NODE_ENV === 'production',
+        // sameSite: 'strict' 
+      })
+      setIsLoggedIn(true)
+    }
+
+    async function checkUserStatus(){
+      const currentToken = Cookies.get('access')
+      try{
+        if(!currentToken){
+          setIsLoggedIn(false);
+        }else{
+          setIsLoggedIn(true);
+        }
+      }catch(error){
+        console.error("Error checking user status:", error);
+        setIsLoggedIn(false); 
+      }
+    }
+    
+    checkUserStatus();
+  }, [initialToken])
 
   const handleDragEnd = (event : any, info : any) => {
     if (info.offset.y < -50) {
@@ -63,7 +102,7 @@ export default function Component() {
         method : 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${initialToken}`,
         },
         body: JSON.stringify(item),
       });
@@ -84,7 +123,7 @@ export default function Component() {
       const response = await fetch('http://127.0.0.1:8000/api/v1/lists/',{
         method : 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${initialToken}`,
         },
       });
       if(!response.ok) throw new Error('Failed to fetch lists');
@@ -128,13 +167,13 @@ export default function Component() {
 
   const handleRemoveItem = async (id : number) => {
     try{
-      const token = Cookies.get('access');
-      if(!token) throw new Error('No token found');
+      // const token = Cookies.get('access');
+      // if(!token) throw new Error('No token found');
 
       const response = await fetch(`http://127.0.0.1:8000/api/v1/lists/${id}/` , {
         method : 'DELETE',
         headers : {
-          'Authorization' : `Bearer ${token}`,
+          'Authorization' : `Bearer ${initialToken}`,
         },
       });
 
@@ -169,6 +208,14 @@ export default function Component() {
   }
 
   const toggleListVisibility = async () => {
+    console.log("logged in : ",isLoggedIn)  
+    
+    // if(!isLoggedIn){
+    //   router.push('/profile') 
+    // }
+
+    // console.log("list visible : ", isListVisible)
+    
     if(!isListVisible){
       try{
         const data = await fetchUserLists();
@@ -178,23 +225,24 @@ export default function Component() {
       }
     }
     setIsListVisible(!isListVisible);
+    // console.log("list visible2 : ", isListVisible)
   }
 
-  useEffect(() => {
-    async function checkUserStatus(){
-      try{
-        if(!token){
-          setIsLoggedIn(false);
-        }else{
-          setIsLoggedIn(true);
-        }
-      }catch(error){
-        console.error("Error checking user status:", error);
-        setIsLoggedIn(false); 
-      }
-    }
-    checkUserStatus();
-  } , []);
+  // useEffect(() => {
+  //   async function checkUserStatus(){
+  //     try{
+  //       if(!token){
+  //         setIsLoggedIn(false);
+  //       }else{
+  //         setIsLoggedIn(true);
+  //       }
+  //     }catch(error){
+  //       console.error("Error checking user status:", error);
+  //       setIsLoggedIn(false); 
+  //     }
+  //   }
+  //   checkUserStatus();
+  // } , []);
   
 
   return (
@@ -209,15 +257,16 @@ export default function Component() {
             {/* Right side - Text */}
             <div className="w-full p-4 sm:p-8 lg:p-12 flex flex-col justify-center items-center py-auto ">
               <div className="p-4 sm:p-6 lg:p-8 rounded-lg transition-all fade-in-out shadow-2xl max-w-xl w-full relative z-[100]">
-                <div id='background' className='!z-[-100] !brightness-100 !left-0 !top-0' style={{ "backdropFilter": "blur(20px)" }}></div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-black z-[100]">Welcome to Our Professional Landing Page</h1>
-                <p className="text-base sm:text-lg lg:text-xl text-black z-[100]">
-                  Discover our cutting-edge solutions designed to elevate your business.
-                  Our innovative approach combines state-of-the-art technology with unparalleled expertise.
+                <div id='background' className='!z-[-100] !brightness-100 !left-0 !top-0 items-center' style={{ "backdropFilter": "blur(20px)" }}></div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-black z-[100] text-center">Affiliate Marketing</h1>
+                <p className="text-base sm:text-lg lg:text-xl text-black z-[100] text-center">
+                  Discover the ultimate ease in shopping through multiple platforms on this single webpage exclusively built for you !! 
                 </p>
-                <Button className="mt-4 sm:mt-6 lg:mt-8 bg-black hover:bg-gray-800 text-white w-full sm:w-auto" size="lg" onClick={() => setIsModalOpen(true)}>
+                <div className='items-center text-center'>
+                <Button className="mt-4 sm:mt-6 lg:mt-8 bg-black hover:bg-gray-800 text-white w-full sm:w-auto text-center" size="lg" onClick={() => setIsModalOpen(true)}>
                   Get Started
                 </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -256,6 +305,13 @@ export default function Component() {
                 variant="ghost"
                 size="icon"
                 onClick={toggleListVisibility}
+                // onClick={() => {
+                //   if(isLoggedIn){
+                //     toggleListVisibility
+                //   }else{
+                //     router.push('/profile')
+                //   }
+                // }}
                 className="text-black hover:text-gray-700 hover:bg-gray-100"
               >
                 <X className="h-6 w-6" />
@@ -339,6 +395,13 @@ export default function Component() {
                 <Button
                   className="rounded-full w-12 h-12 p-0 shadow-lg hover:shadow-xl transition-shadow bg-black hover:bg-gray-800 text-white"
                   onClick={toggleListVisibility}
+                  // onClick={() => {
+                  //   if(isLoggedIn){
+                  //     toggleListVisibility
+                  //   }else{
+                  //     router.push('/profile')
+                  //   }
+                  // }}
                 >
                   {isListVisible ? <Home className="w-6 h-6" /> : <List className="w-6 h-6" />}
                 </Button>
