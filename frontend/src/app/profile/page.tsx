@@ -118,8 +118,10 @@ export default function Profile()
                 Cookies.set('refresh',result.refresh)
                 const userDetails = jwtDecode(result.access);
                 Cookies.set('user',JSON.stringify(userDetails))
-                console.log("Sign In successfull" ,  result);
-                router.push('/')
+                // console.log("Sign In successfull" ,  result);
+                // router.refresh()
+                // router.push('/')
+                window.location.href = '/'
             }
 
         }catch(error){
@@ -133,9 +135,14 @@ export default function Profile()
         Cookies.remove('access');
         Cookies.remove('refresh');
         Cookies.remove('user');
+
+        // router.refresh()
+
         setIsLoggedIn(false);
         setUser(null);
-        router.push('/');
+
+        // router.push('/');
+        window.location.href = '/'
     }
 
     return(

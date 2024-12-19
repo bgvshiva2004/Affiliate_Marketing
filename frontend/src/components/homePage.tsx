@@ -29,12 +29,8 @@ interface HomePageProps {
 }
 
 export default function HomePage({initialToken} : HomePageProps){
+
   const [isLoggedIn , setIsLoggedIn ] = useState<boolean | null>(null)
-// }
-
-// export default function Component() {
-
-  
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [isListVisible, setIsListVisible] = useState<boolean>(false)
   const [newItem, setNewItem] = useState<ListItem>({ title: 'Sample Title', description: 'Sample Description' })
@@ -46,9 +42,9 @@ export default function HomePage({initialToken} : HomePageProps){
 
   const router = useRouter()
 
-  const token = Cookies.get('access');
-  console.log("token : ",token)
-  console.log("initialToken : ",initialToken)
+  // const token = Cookies.get('access');
+  // console.log("token : ",token)
+  // console.log("initialToken : ",initialToken)
   // if(!token) throw new Error('No token found');
 
   useEffect(() => {
@@ -57,8 +53,8 @@ export default function HomePage({initialToken} : HomePageProps){
       console.log("initialToken : ",initialToken) 
       Cookies.set('access' , initialToken, {
         path : '/',
-        // secure: process.env.NODE_ENV === 'production',
-        // sameSite: 'strict' 
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict' 
       })
       setIsLoggedIn(true)
     }
@@ -210,9 +206,10 @@ export default function HomePage({initialToken} : HomePageProps){
   const toggleListVisibility = async () => {
     console.log("logged in : ",isLoggedIn)  
     
-    // if(!isLoggedIn){
-    //   router.push('/profile') 
-    // }
+    if(!isLoggedIn){
+      router.push('/profile') 
+      return
+    }
 
     // console.log("list visible : ", isListVisible)
     
@@ -227,22 +224,6 @@ export default function HomePage({initialToken} : HomePageProps){
     setIsListVisible(!isListVisible);
     // console.log("list visible2 : ", isListVisible)
   }
-
-  // useEffect(() => {
-  //   async function checkUserStatus(){
-  //     try{
-  //       if(!token){
-  //         setIsLoggedIn(false);
-  //       }else{
-  //         setIsLoggedIn(true);
-  //       }
-  //     }catch(error){
-  //       console.error("Error checking user status:", error);
-  //       setIsLoggedIn(false); 
-  //     }
-  //   }
-  //   checkUserStatus();
-  // } , []);
   
 
   return (
@@ -305,13 +286,6 @@ export default function HomePage({initialToken} : HomePageProps){
                 variant="ghost"
                 size="icon"
                 onClick={toggleListVisibility}
-                // onClick={() => {
-                //   if(isLoggedIn){
-                //     toggleListVisibility
-                //   }else{
-                //     router.push('/profile')
-                //   }
-                // }}
                 className="text-black hover:text-gray-700 hover:bg-gray-100"
               >
                 <X className="h-6 w-6" />
@@ -395,13 +369,6 @@ export default function HomePage({initialToken} : HomePageProps){
                 <Button
                   className="rounded-full w-12 h-12 p-0 shadow-lg hover:shadow-xl transition-shadow bg-black hover:bg-gray-800 text-white"
                   onClick={toggleListVisibility}
-                  // onClick={() => {
-                  //   if(isLoggedIn){
-                  //     toggleListVisibility
-                  //   }else{
-                  //     router.push('/profile')
-                  //   }
-                  // }}
                 >
                   {isListVisible ? <Home className="w-6 h-6" /> : <List className="w-6 h-6" />}
                 </Button>
