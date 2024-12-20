@@ -1,6 +1,6 @@
 'use client'
 
-import { useState , useEffect } from 'react'
+import { useState , useEffect , useCallback } from 'react'
 import { Plus, X, List, Home, Edit, ChevronUp, ChevronDown } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -16,16 +16,17 @@ import { ModalComponent } from './ModalComponent'
 import { ShoppingSpot } from './ShoppingSpotComponent'
 
 interface ListItem {
-  id?: number;
+  id : number;
   title : string ;
   description : string;
 }
 
 interface HomePageProps {
   initialToken?: string | null
+  initialLists: ListItem[]
 }
 
-export default function HomePage({initialToken} : HomePageProps){
+export default function HomePage({initialToken , initialLists} : HomePageProps){
 
   const [isLoggedIn , setIsLoggedIn ] = useState<boolean | null>(null)
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
@@ -35,12 +36,15 @@ export default function HomePage({initialToken} : HomePageProps){
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const controls = useAnimation()
 
+  const [lists, setLists] = useState<ListItem[]>(initialLists);
+
   const router = useRouter()
 
   // const token = Cookies.get('access');
   // console.log("token : ",token)
   // console.log("initialToken : ",initialToken)
   // if(!token) throw new Error('No token found');
+
 
   useEffect(() => {
 
@@ -77,14 +81,52 @@ export default function HomePage({initialToken} : HomePageProps){
     setIsModalOpen(true)
   }
 
-  const handleItemSaved = (item: ListItem) => {
-    setEditingItem(null)
-    setIsModalOpen(false)
-    // Refresh list if visible
-    if (isListVisible) {
-      toggleListVisibility()
+  // const handleItemSaved = (item: ListItem) => {
+  //   setEditingItem(null)
+  //   setIsModalOpen(false)
+  //   // Refresh list if visible
+  //   if (isListVisible) {
+  //     toggleListVisibility()
+  //   }
+  // }
+
+  const refreshLists = useCallback(async () => {
+    if(!initialToken) return;
+
+    try{
+      const response = await fetch('http://127.0.0.1:8000/api/v1/lists/' , {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${initialToken}`,
+        },
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch lists');
+      const newLists = await response.json();
+      setLists(newLists);
+
+    }catch(error){
+      console.error('Error refreshing lists:', error);
+      toast.error('Failed to refresh lists');
     }
-  }
+
+  } , [initialToken]);
+
+  const handleItemSaved = async (newItem: ListItem) => {
+
+    setLists(currentLists => {
+        const exists = currentLists.some(item => item.id === newItem.id);
+        if (exists) {
+            return currentLists.map(item => 
+                item.id === newItem.id ? newItem : item
+            );
+        }
+        return [...currentLists, newItem];
+    });
+
+    await refreshLists();
+    setEditingItem(null);
+  };
 
   const toggleListVisibility = async () => {
     // console.log("logged in : ",isLoggedIn)  
@@ -95,6 +137,7 @@ export default function HomePage({initialToken} : HomePageProps){
     }
     setIsListVisible(!isListVisible);
   }
+  
   
 
   return (
@@ -153,6 +196,7 @@ export default function HomePage({initialToken} : HomePageProps){
           <ListComponent
             isVisible = {isListVisible}
             token = {initialToken}
+            initialLists = {lists}
             onClose={() => setIsListVisible(false)}
             onEditItem={handleEditItem}
           />

@@ -15,39 +15,18 @@ interface ListItem {
 interface ListComponentProps {
     isVisible : boolean;
     token : string | null | undefined;
+    initialLists : ListItem[];
     onClose: () => void;
     onEditItem: (item: ListItem) => void;
 }
 
-export const ListComponent = ({isVisible , token , onClose , onEditItem} : ListComponentProps) => {
-    const [listItems, setListItems] = useState<ListItem[]>([])
-
-    // console.log("token in list : ", token)
-
-    const fetchUserLists = async () : Promise<ListItem[]> => {
-        try{
-
-            const response = await fetch('http://127.0.0.1:8000/api/v1/lists/',{
-            method : 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-            });
-            if(!response.ok) throw new Error('Failed to fetch lists');
-            const data = await response.json();
-            return data;
-        }catch(error){
-            console.error('Error fetching user lists:', error);
-            throw error;
-        }
-    }
-
+export const ListComponent = ({isVisible , token , initialLists , onClose , onEditItem} : ListComponentProps) => {
+  
+    const [listItems , setListItems] = useState<ListItem[]>(initialLists)
 
     const handleRemoveItem = async (id : number) => {
         try{
-          // const token = Cookies.get('access');
-          // if(!token) throw new Error('No token found');
-    
+          
           const response = await fetch(`http://127.0.0.1:8000/api/v1/lists/${id}/` , {
             method : 'DELETE',
             headers : {
@@ -75,20 +54,8 @@ export const ListComponent = ({isVisible , token , onClose , onEditItem} : ListC
     }
 
     useEffect(() => {
-        if(isVisible){
-            const fetchLists = async () => {
-                try {
-                    const data = await fetchUserLists();
-                    setListItems(data);
-                }catch(error){
-                    toast.error('Failed to fetch lists');
-                    console.error('Error fetching lists : ',error);
-                }
-            };
-
-            fetchLists();
-        }
-    } , [isVisible, token])
+      setListItems(initialLists);
+    },[initialLists]);
 
     return (
         <div className="fixed top-0 left-0 w-full h-full z-[100000] overflow-auto bg-white/80 backdrop-blur-sm p-4 sm:p-6 transition-opacity duration-300 ease-in-out">

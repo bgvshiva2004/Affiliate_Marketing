@@ -18,14 +18,25 @@ import Link from "next/link"
 import Cookies from 'js-cookie'
 import { ListComponent } from "./ListComponent"
 
-export default function Navbar() {
+interface ListItem {
+  id : number;
+  title : string;
+  description : string;
+}
+
+interface NavbarProps{
+  token? : string | null;
+  initialLists : ListItem[];
+}
+
+export default function Navbar({token , initialLists} : NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const pathname = usePathname()
 
   const [isListVisible , setIsListVisible] = useState(false)
 
-  const token = Cookies.get('access')
+  // const token = Cookies.get('access')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -213,6 +224,7 @@ export default function Navbar() {
       <ListComponent 
           isVisible = {isListVisible}
           token = {token}
+          initialLists={initialLists}
           onClose={() => setIsListVisible(false)}
           onEditItem={(item) => console.log("Edit item : ", item)}
       />

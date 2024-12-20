@@ -7,7 +7,12 @@ import { toast } from 'react-toastify'
 import { useState  } from "react"
 
 interface ListItem {
-  id?: number;
+  id : number;
+  title: string;
+  description: string;
+}
+
+interface NewListItem {
   title: string;
   description: string;
 }
@@ -21,12 +26,12 @@ interface ModalComponentProps {
 }
 
 export const ModalComponent = ({ isOpen , onClose , token , editingItem ,onItemSaved }: ModalComponentProps) => {
-    const [newItem, setNewItem] = useState<ListItem>({ 
+    const [newItem, setNewItem] = useState<NewListItem>({ 
         title: editingItem?.title || 'Sample Title', 
         description: editingItem?.description || 'Sample Description' 
     })
 
-    const saveListItem = async (item : ListItem) : Promise<ListItem> => {
+    const saveListItem = async (item : NewListItem) : Promise<ListItem> => {
         try{
           // console.log("item : ",item)
           const response = await fetch('http://127.0.0.1:8000/api/v1/lists/',{
