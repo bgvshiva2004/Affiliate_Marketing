@@ -15,10 +15,17 @@ import {
 } from "@/components/ui/sheet"
 import Link from "next/link"
 
+import Cookies from 'js-cookie'
+import { ListComponent } from "./ListComponent"
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const pathname = usePathname()
+
+  const [isListVisible , setIsListVisible] = useState(false)
+
+  const token = Cookies.get('access')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +47,7 @@ export default function Navbar() {
   }
 
   return (
+  <>
     <nav
       className={`fixed w-full  top-0 transition-all duration-300 !z-[100000] ${navBackground}`}
     >
@@ -104,9 +112,21 @@ export default function Navbar() {
                     </Link>
                   </SheetClose>
                   <SheetClose asChild>
-                    <Link href="/list" className="text-base font-medium text-gray-900 hover:text-primary">
+                    {/* <Link href="/list" className="text-base font-medium text-gray-900 hover:text-primary">
                       List
-                    </Link>
+                    </Link> */}
+                    <button
+                      onClick={()=>{
+                        if(!token){
+                          window.location.href = '/profile';
+                        }else{
+                          setIsListVisible(true);
+                        }
+                      }}
+                      className="text-base font-medium text-gray-500 hover:text-primary"
+                    >
+                      List
+                    </button>
                   </SheetClose>
                   <SheetClose asChild>
                     <Link href="/profile" className="text-base font-medium text-gray-900 hover:text-primary">
@@ -124,9 +144,21 @@ export default function Navbar() {
             <Link href="/shop" className="text-base font-medium text-gray-500 hover:text-primary">
               Products
             </Link>
-            <Link href="/list" className="text-base font-medium text-gray-500 hover:text-primary">
+            {/* <Link href="/list" className="text-base font-medium text-gray-500 hover:text-primary">
               List
-            </Link>
+            </Link> */}
+            <button
+                onClick={()=>{
+                  if(!token){
+                    window.location.href = '/profile';
+                  }else{
+                    setIsListVisible(true);
+                  }
+                }}
+                className="text-base font-medium text-gray-500 hover:text-primary"
+              >
+                List
+            </button>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <div className="relative flex items-center">
@@ -176,5 +208,15 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+
+    {isListVisible && (
+      <ListComponent 
+          isVisible = {isListVisible}
+          token = {token}
+          onClose={() => setIsListVisible(false)}
+          onEditItem={(item) => console.log("Edit item : ", item)}
+      />
+    )}
+  </>
   )
 }
