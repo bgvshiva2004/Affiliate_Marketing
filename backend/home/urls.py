@@ -6,13 +6,15 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from .views import *
+
 urlpatterns = [
-    path('',views.index,name="index"),
     path('products/', views.ProductLinksAPI.as_view()),
-    path('notes/' , views.UserListsAPI.as_view()),
+    path('lists/' , UserListsAPI.as_view(),name='user-lists'),
+    path('lists/<int:pk>/' , UserListsAPI.as_view(),name='user-list-detail'),
+    path('userDetails/',views.UserDetails.as_view()),
     re_path('signup',views.signup),
     re_path('login',views.login),
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
-    
 ]

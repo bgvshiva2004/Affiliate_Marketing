@@ -10,6 +10,6 @@ admin.site.register(ProductLinks,ProductLinksAdmin)
 
 
 class UserListsAdmin(admin.ModelAdmin):
-    list_display = ('listAuthor' , 'listTitle' , 'listContent')
+    list_display = ('user' , 'title' , 'description')
 
 admin.site.register(UserLists , UserListsAdmin)

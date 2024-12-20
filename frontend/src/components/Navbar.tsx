@@ -1,18 +1,31 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { Menu, X, ShoppingCart, List, User,Search } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { Menu, X, ShoppingCart, List, User, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet"
+import Link from "next/link"
+
+import Cookies from 'js-cookie'
+import { ListComponent } from "./ListComponent"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const pathname = usePathname()
+
+  const [isListVisible , setIsListVisible] = useState(false)
+
+  const token = Cookies.get('access')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,16 +36,25 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const isHomePage = pathname === "/"
+  const navBackground = isHomePage && !scrolled
+    ? 'bg-transparent'
+    : 'bg-white/80 backdrop-blur-md shadow-md'
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    // Add your search logic here
+  }
+
   return (
+  <>
     <nav
-      className={`fixed w-full z-50 top-0 transition-all duration-300  ${
-        scrolled ? 'bg-white/80 backdrop-blur-md shadow-md' : 'bg-transparent'
-      }`}
+      className={`fixed w-full  top-0 transition-all duration-300 !z-[100000] ${navBackground}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="#" className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -48,9 +70,9 @@ export default function Navbar() {
                 />
               </svg>
               <span className="text-xl font-bold text-primary">Aone</span>
-            </a>
+            </Link>
           </div>
-          <div className="-mr-2 -my-2 md:hidden">
+          <div className="-mr-2 -my-2 md:hidden !z-[100000]">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-primary">
@@ -58,47 +80,143 @@ export default function Navbar() {
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right">
+              <SheetContent side="right" className="w-[300px] sm:w-[400px] !z-[100000]">
                 <SheetHeader>
                   <SheetTitle>Menu</SheetTitle>
                 </SheetHeader>
                 <div className="mt-6 flex flex-col space-y-4">
-                  <a href="#" className="text-base font-medium text-gray-900 hover:text-primary">
-                    Shop
-                  </a>
-                  <a href="#" className="text-base font-medium text-gray-900 hover:text-primary">
-                    List
-                  </a>
-                  <a href="#" className="text-base font-medium text-gray-900 hover:text-primary">
-                    Account
-                  </a>
+                  <form onSubmit={handleSearch} className="flex w-full items-center">
+                    <Input
+                      type="search"
+                      placeholder="Search..."
+                      className="flex-grow"
+                    />
+                    <Button
+                      type="submit"
+                      variant="ghost"
+                      size="icon"
+                      className="ml-2"
+                    >
+                      <Search className="h-4 w-4" />
+                      <span className="sr-only">Submit search</span>
+                    </Button>
+                  </form>
+                  <SheetClose asChild>
+                    <Link href="/" className="text-base font-medium text-gray-900 hover:text-primary">
+                      Home
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link href="/shop" className="text-base font-medium text-gray-900 hover:text-primary">
+                      Products
+                    </Link>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    {/* <Link href="/list" className="text-base font-medium text-gray-900 hover:text-primary">
+                      List
+                    </Link> */}
+                    <button
+                      onClick={()=>{
+                        if(!token){
+                          window.location.href = '/profile';
+                        }else{
+                          setIsListVisible(true);
+                        }
+                      }}
+                      className="text-base font-medium text-gray-500 hover:text-primary"
+                    >
+                      List
+                    </button>
+                  </SheetClose>
+                  <SheetClose asChild>
+                    <Link href="/profile" className="text-base font-medium text-gray-900 hover:text-primary">
+                      Account
+                    </Link>
+                  </SheetClose>
                 </div>
               </SheetContent>
             </Sheet>
           </div>
           <nav className="hidden md:flex space-x-10">
-          <a href="#" className="text-base font-medium text-gray-500 hover:text-primary">
+            <Link href="/" className="text-base font-medium text-gray-500 hover:text-primary">
               Home
-            </a>
-            <a href="#" className="text-base font-medium text-gray-500 hover:text-primary">
-              Shop
-            </a>
-            <a href="#" className="text-base font-medium text-gray-500 hover:text-primary">
+            </Link>
+            <Link href="/shop" className="text-base font-medium text-gray-500 hover:text-primary">
+              Products
+            </Link>
+            {/* <Link href="/list" className="text-base font-medium text-gray-500 hover:text-primary">
               List
-            </a>
+            </Link> */}
+            <button
+                onClick={()=>{
+                  if(!token){
+                    window.location.href = '/profile';
+                  }else{
+                    setIsListVisible(true);
+                  }
+                }}
+                className="text-base font-medium text-gray-500 hover:text-primary"
+              >
+                List
+            </button>
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <Button variant="ghost" size="icon" className="text-primary">
-              <Search  className="h-6 w-6" />
-              <span className="sr-only">Shopping cart</span>
-            </Button>
-            <Button variant="ghost" size="icon" className="text-primary ml-4">
-              <User className="h-6 w-6" />
-              <span className="sr-only">User account</span>
-            </Button>
+            <div className="relative flex items-center">
+              <div className={`absolute right-0 flex items-center transition-all duration-300 ${isSearchOpen
+                ? 'w-64 opacity-100 -translate-x-10'
+                : 'w-0 opacity-0'
+                }`}>
+                <form onSubmit={handleSearch} className="flex w-full items-center rounded-l-full rounded-r-full bg-[#E9E9E9]">
+                  <Input
+                    type="search"
+                    placeholder="Search..."
+                    className={`border-0 focus-visible:ring-0 rounded-l-md ${isSearchOpen ? 'w-full pl-4' : 'w-0'}`}
+                    disabled={!isSearchOpen}
+                  />
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="icon"
+                    className="h-10 rounded-r-full"
+                  >
+                    <Search className="h-4 w-4 rounded-full" />
+                    <span className="sr-only">Submit search</span>
+                  </Button>
+                </form>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-primary relative z-10"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                aria-label={isSearchOpen ? 'Close search' : 'Open search'}
+              >
+                {isSearchOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Search className="h-6 w-6" />
+                )}
+              </Button>
+            </div>
+            <Link href="/profile">
+              <Button variant="ghost" size="icon" className="text-primary ml-4">
+                  <User className="h-6 w-6" />
+                  <span className="sr-only">User profile</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
     </nav>
+
+    {isListVisible && (
+      <ListComponent 
+          isVisible = {isListVisible}
+          token = {token}
+          onClose={() => setIsListVisible(false)}
+          onEditItem={(item) => console.log("Edit item : ", item)}
+      />
+    )}
+  </>
   )
 }

@@ -1,7 +1,7 @@
 from django.shortcuts import render,HttpResponse
 from django.contrib.auth.models import User
 from rest_framework import status
-from rest_framework.generics import ListAPIView , ListCreateAPIView
+from rest_framework.generics import ListAPIView , ListCreateAPIView , RetrieveUpdateDestroyAPIView
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -11,11 +11,13 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from rest_framework_simplejwt.views import TokenRefreshView
 from datetime import datetime
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import CustomTokenRefreshSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
+
+from rest_framework.views import APIView
 
 
 # Create your views here.
@@ -23,6 +25,7 @@ class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny]
     def get_queryset(self):
         print(self.request.user)
         queryset = ProductLinks.objects.all()
@@ -47,12 +50,31 @@ class ProductLinksAPI(ListAPIView):
 
         return queryset
 
-class UserListsAPI(ListCreateAPIView):
+class UserListsAPI(ListCreateAPIView , RetrieveUpdateDestroyAPIView):
     queryset = UserLists.objects.all()
     serializer_class = UserListsSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return UserLists.objects.filter(user = self.request.user)
 
     def perform_create(self , serializer):
-        serializer.save()
+        user = self.request.user
+        print("hello")
+        print(user)
+        serializer.save(user = user)
+
+    def get(self, request, *args, **kwargs):
+        if 'pk' in kwargs:
+            return self.retrieve(request, *args, **kwargs)
+        return super().list(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 @api_view(['POST'])
@@ -86,17 +108,24 @@ def login(request):
 
     return Response({"token" : token.key , "user" : serializer.data})
 
-def index(request):
-    return HttpResponse("Index page")
-        
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
 
-
 class CustomTokenRefreshView(TokenRefreshView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = CustomTokenRefreshSerializer
+
+
+class UserDetails(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        user = request.user
+        return Response({
+            'username' : user.username
+        })
