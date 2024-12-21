@@ -14,46 +14,46 @@ const categories = [
 	{
 		name: "Electronics",
 		products: [
-			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
-			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
-			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
-			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
-			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
-			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
-			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
-			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
-			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
-			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
-			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
-			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
-			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
+			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
+			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
+			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 6, title: "Smartphone X1", price: 699.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 7, title: "Laptop Pro", price: 1299.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
+			{ id: 8, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
+			{ id: 9, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
+			{ id: 10, title: "Tablet Ultra", price: 399.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 11, title: "Smartphone X1", price: 699.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 12, title: "Laptop Pro", price: 1299.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
+			{ id: 13, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
+			{ id: 14, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
+			{ id: 15, title: "Tablet Ultra", price: 399.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 16, title: "Smartphone X1", price: 699.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
+			{ id: 17, title: "Laptop Pro", price: 1299.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
+			{ id: 18, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
+			{ id: 19, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
+			{ id: 20, title: "Tablet Ultra", price: 399.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
 		],
 	},
 	{
 		name: "Clothing",
 		products: [
-			{ id: 6, title: "Classic Cotton T-Shirt", price: 19.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "ComfyWear", platform: "FashionHub" },
-			{ id: 7, title: "Slim Fit Jeans", price: 49.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "DenimCo", platform: "JeanScene" },
-			{ id: 8, title: "Running Sneakers", price: 79.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "SportyFeet", platform: "AthleticZone" },
-			{ id: 9, title: "Cozy Hoodie", price: 39.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "ComfyWear", platform: "FashionHub" },
-			{ id: 10, title: "Summer Floral Dress", price: 89.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "ChicStyles", platform: "TrendyThreads" },
+			{ id: 6, title: "Classic Cotton T-Shirt", price: 19.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "ComfyWear", platform: "FashionHub" },
+			{ id: 7, title: "Slim Fit Jeans", price: 49.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "DenimCo", platform: "JeanScene" },
+			{ id: 8, title: "Running Sneakers", price: 79.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "SportyFeet", platform: "AthleticZone" },
+			{ id: 9, title: "Cozy Hoodie", price: 39.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "ComfyWear", platform: "FashionHub" },
+			{ id: 10, title: "Summer Floral Dress", price: 89.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "ChicStyles", platform: "TrendyThreads" },
 		],
 	},
 	{
 		name: "Home & Garden",
 		products: [
-			{ id: 11, title: "Programmable Coffee Maker", price: 89.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "BrewMaster", platform: "KitchenKing" },
-			{ id: 12, title: "High-Speed Blender", price: 59.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "KitchenPro", platform: "CookCentral" },
-			{ id: 13, title: "Ceramic Plant Pot Set", price: 24.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "GreenThumb", platform: "GardenGalore" },
-			{ id: 14, title: "Decorative Throw Pillow", price: 29.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "CozyHome", platform: "HomeHaven" },
-			{ id: 15, title: "Modern Table Lamp", price: 49.99, imageUrl: "/placeholder.svg?height=150&width=200", companyName: "LightItUp", platform: "IlluminateMe" },
+			{ id: 11, title: "Programmable Coffee Maker", price: 89.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "BrewMaster", platform: "KitchenKing" },
+			{ id: 12, title: "High-Speed Blender", price: 59.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "KitchenPro", platform: "CookCentral" },
+			{ id: 13, title: "Ceramic Plant Pot Set", price: 24.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "GreenThumb", platform: "GardenGalore" },
+			{ id: 14, title: "Decorative Throw Pillow", price: 29.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CozyHome", platform: "HomeHaven" },
+			{ id: 15, title: "Modern Table Lamp", price: 49.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "LightItUp", platform: "IlluminateMe" },
 		],
 	},
 ]
@@ -114,7 +114,7 @@ export default function ProductsPage() {
 									Filters
 								</Button>
 							</SheetTrigger>
-							<SheetContent>
+							<SheetContent className="z-[10000000]">
 								<SheetHeader>
 									<SheetTitle>Filters</SheetTitle>
 								</SheetHeader>
@@ -161,6 +161,7 @@ export default function ProductsPage() {
 				<ScrollArea className="h-[calc(100vh-12rem)] bg-white" >
 					{filteredCategories.map((category, index) => (
 						<CategorySection
+							id={index}
 							key={category.name}
 							name={category.name}
 							products={category.products}
