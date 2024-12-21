@@ -62,7 +62,7 @@ export default function HomePage({
 
   useEffect(() => {
     if (initialToken) {
-      console.log("initialToken : ", initialToken);
+      // console.log("initialToken : ", initialToken);
       Cookies.set("access", initialToken, {
         path: "/",
         secure: process.env.NODE_ENV === "production",
@@ -93,15 +93,6 @@ export default function HomePage({
     setEditingItem(item);
     setIsModalOpen(true);
   };
-
-  // const handleItemSaved = (item: ListItem) => {
-  //   setEditingItem(null)
-  //   setIsModalOpen(false)
-  //   // Refresh list if visible
-  //   if (isListVisible) {
-  //     toggleListVisibility()
-  //   }
-  // }
 
   const refreshLists = useCallback(async () => {
     if (!initialToken) return;
@@ -135,8 +126,7 @@ export default function HomePage({
     });
 
     await refreshLists();
-    setEditingItem(null);
-    setIsModalOpen(false);
+    handleCloseModal();
   };
 
   const toggleListVisibility = async () => {
@@ -148,6 +138,11 @@ export default function HomePage({
     }
     setIsListVisible(!isListVisible);
   };
+
+  const handleCloseModal = useCallback(async () => {
+    setIsModalOpen(false);
+    setEditingItem(null);
+  },[]);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -235,6 +230,7 @@ export default function HomePage({
             initialLists={lists}
             onClose={() => setIsListVisible(false)}
             onEditItem={handleEditItem}
+            isModalOpen = {isModalOpen}
           />
         )}
 

@@ -89,12 +89,7 @@ export const ModalComponent = ({
     const title = newItem.title.trim();
     const description = newItem.description.trim();
 
-    // if (!title) {
-    //   toast.error('Title is required');
-    //   return;
-    // }
-
-    if (!description) {
+    if (!title && !description) {
       toast.error("Populate the List");
       return;
     }
@@ -119,11 +114,11 @@ export const ModalComponent = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] z-[1000000]">
-        <DialogHeader>
+        {/* <DialogHeader>
           <DialogTitle className="text-black">
             {editingItem ? "Edit the list" : ""}
           </DialogTitle>
-        </DialogHeader>
+        </DialogHeader> */}
         <div className="space-y-4">
           <div>
             <ContentEditable

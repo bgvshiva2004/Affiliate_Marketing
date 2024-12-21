@@ -28,6 +28,7 @@ interface ListComponentProps {
   initialLists: ListItem[];
   onClose: () => void;
   onEditItem: (item: ListItem) => void;
+  isModalOpen : boolean;
 }
 
 export const ListComponent = ({
@@ -36,9 +37,13 @@ export const ListComponent = ({
   initialLists,
   onClose,
   onEditItem,
+  isModalOpen,
 }: ListComponentProps) => {
   const [listItems, setListItems] = useState<ListItem[]>(initialLists);
   const [itemToDelete , setItemToDelete] = useState<ListItem | null>(null);
+  const [isLocalModalOpen , setIsLocalModalOpen] = useState(false);
+  // const [isEditModalOpen , setIsEditModalOpen] = useState(false);
+  const isBackgroundBlurred = isLocalModalOpen || isModalOpen;
 
   const handleRemoveItem = async (id: number) => {
     try {
@@ -55,8 +60,9 @@ export const ListComponent = ({
       if (!response.ok) throw new Error("Failed to delete the list");
 
       setListItems(listItems.filter((item) => item.id !== id));
-      toast.info("Item removed");
+      // toast.info("Item removed");
       setItemToDelete(null);
+      setIsLocalModalOpen(false);
     } catch (error) {
       console.error("Error deleting list item:", error);
       toast.error("Failed to remove the item");
@@ -103,13 +109,19 @@ export const ListComponent = ({
     }
   };
 
+  const handleEditClick = (item : ListItem) => {
+    // setIsEditModalOpen(true);
+    // setIsModalOpen(true);
+    onEditItem(item);
+  }
+
   useEffect(() => {
     setListItems(initialLists);
   }, [initialLists]);
 
   return (
-    <>
-    <div className="fixed top-0 left-0 w-full h-full z-[100000] overflow-auto bg-white/80 backdrop-blur-sm p-4 sm:p-6 transition-opacity duration-300 ease-in-out">
+    <div className="relative">
+    <div className={`fixed top-0 left-0 w-full h-full z-[100000] overflow-auto bg-white/80 backdrop-blur-sm p-4 sm:p-6 transition-opacity duration-300 ease-in-out ${isBackgroundBlurred ? 'blur-sm brightness-75' : ''}`}>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl sm:text-2xl font-bold text-black">Your Lists</h2>
         <Button
@@ -123,7 +135,7 @@ export const ListComponent = ({
         </Button>
       </div>
       <ScrollArea className="h-[calc(100vh-100px)] ">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 !z-[100000000]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
           {listItems.map((item) => (
             <Card
               key={item.id}
@@ -152,8 +164,11 @@ export const ListComponent = ({
                   <Button
                     variant="outline"
                     size="icon"
-                    //   onClick={() => handleEditItem(item)}
-                    onClick={() => onEditItem(item)}
+                      onClick={() => handleEditClick(item)}
+                    // onClick={() => {
+                    //   setIsModalOpen(true);
+                    //   onEditItem(item);
+                    // }}
                     className="border-gray-300 text-black hover:bg-gray-50"
                   >
                     <Edit className="h-4 w-4" />
@@ -163,7 +178,10 @@ export const ListComponent = ({
                     variant="destructive"
                     size="icon"
                     // onClick={() => handleRemoveItem(item.id)}
-                    onClick={() => setItemToDelete(item)}
+                    onClick={() => {
+                      setIsLocalModalOpen(true);
+                      setItemToDelete(item);
+                    }}
                     className="bg-red-500 hover:bg-red-600 text-white"
                   >
                     <X className="h-4 w-4" />
@@ -177,7 +195,14 @@ export const ListComponent = ({
       </ScrollArea>
     </div>
 
-    <AlertDialog open={!!itemToDelete} onOpenChange={() => setItemToDelete(null)}>
+    {isBackgroundBlurred && (
+      <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[150]"/>
+    )}
+
+    <AlertDialog open={!!itemToDelete} onOpenChange={(open) => {
+      setItemToDelete(null);
+      setIsLocalModalOpen(open);
+    }}>
         <AlertDialogContent className="z-[200000] fixed">
           <AlertDialogHeader>
             <AlertDialogTitle>Do you wish to delete the list {itemToDelete?.title && <span> "{itemToDelete.title}"</span>} ?</AlertDialogTitle>
@@ -197,6 +222,6 @@ export const ListComponent = ({
         </AlertDialogContent>
       </AlertDialog>
 
-    </>
+    </div>
   );
 };

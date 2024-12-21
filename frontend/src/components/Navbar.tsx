@@ -17,6 +17,7 @@ import Link from "next/link"
 
 import Cookies from 'js-cookie'
 import { ListComponent } from "./ListComponent"
+import { ModalComponent } from "./ModalComponent"
 
 interface ListItem {
   id : number;
@@ -35,6 +36,9 @@ export default function Navbar({token , initialLists} : NavbarProps) {
   const pathname = usePathname()
 
   const [isListVisible , setIsListVisible] = useState(false)
+
+  const [isModalOpen , setIsModalOpen] = useState(false)
+  const [editingItem , setEditingItem] = useState<ListItem | null>(null)
 
   // const token = Cookies.get('access')
 
@@ -55,6 +59,16 @@ export default function Navbar({token , initialLists} : NavbarProps) {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     // Add your search logic here
+  }
+
+  const handleEditItem = (item : ListItem) => {
+    setEditingItem(item);
+    setIsModalOpen(true);
+  }
+
+  const handleItemSaved = (item : ListItem) => {
+    setIsModalOpen(false);
+    setEditingItem(null);
   }
 
   return (
@@ -226,9 +240,20 @@ export default function Navbar({token , initialLists} : NavbarProps) {
           token = {token}
           initialLists={initialLists}
           onClose={() => setIsListVisible(false)}
-          onEditItem={(item) => console.log("Edit item : ", item)}
+          // onEditItem={(item) => console.log("Edit item : ", item)}
+          onEditItem={handleEditItem}
+          isModalOpen = {isModalOpen}
       />
     )}
+
+    <ModalComponent
+      isOpen = {isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      token = {token}
+      editingItem={editingItem}
+      onItemSaved={handleItemSaved}
+    />
+
   </>
   )
 }
