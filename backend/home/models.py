@@ -6,8 +6,12 @@ class ProductLinks(models.Model):
     product_name = models.CharField(max_length=100)
     product_link = models.URLField()
     product_platform = models.CharField(max_length=100)
-    # product_image = models.ImageField()
-    product_price = models.CharField(max_length=50 ,default='100')
+    product_image = models.ImageField(upload_to='product_images/', blank=True, null=True)
+    product_price = models.DecimalField(max_digits=10, decimal_places=2, default=100.00)
+    product_description = models.TextField(blank=True)
+    product_country = models.CharField(max_length=100, default='India')
+    product_category = models.CharField(max_length=100, default='none')
+    # product_niche = models.CharField(max_length=100)
 
     def __str__(self):
         return self.product_name

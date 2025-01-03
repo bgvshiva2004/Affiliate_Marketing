@@ -1,8 +1,7 @@
-from django.shortcuts import render,HttpResponse
 from django.contrib.auth.models import User
-from rest_framework import status
+from rest_framework import status , viewsets
 from rest_framework.generics import ListAPIView , ListCreateAPIView , RetrieveUpdateDestroyAPIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view , action
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from .models import *
@@ -24,11 +23,20 @@ from rest_framework.views import APIView
 class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    # permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     def get_queryset(self):
         print(self.request.user)
         queryset = ProductLinks.objects.all()
+
+        search_query = self.request.query_params.get('q' , None)
+        if search_query:
+            queryset = queryset.filter(
+                Q(product_name__icontains=search_query) |
+                Q(product_description__icontains=search_query)
+            )
+            return queryset
+        
         product_id = self.request.query_params.get('id', None)
         product_name = self.request.query_params.get('product_name', None)
         min_price = self.request.query_params.get('min_price', None)
@@ -129,3 +137,5 @@ class UserDetails(APIView):
         return Response({
             'username' : user.username
         })
+    
+

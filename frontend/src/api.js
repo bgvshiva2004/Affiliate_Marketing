@@ -46,3 +46,10 @@ export function getAllProducts(token = null, params = {}, options = {}) {
 export function getAllNotes(token = null, params = {}, options = {}) {
   return apiCall('notes', params, token, options);
 }
+
+export function getSearchProducts(query , token = null, params = {} , options = {}){
+  return apiCall('products' , {
+    q : query,
+    ...params
+  } , token , options);
+}

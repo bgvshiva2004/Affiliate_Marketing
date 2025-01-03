@@ -114,6 +114,7 @@ export default function Profile()
                 alert("Sign In error");
             }else{
                 const result = await response.json();
+                // console.log("result : " , result)
                 Cookies.set('access',result.access)
                 Cookies.set('refresh',result.refresh)
                 const userDetails = jwtDecode(result.access);

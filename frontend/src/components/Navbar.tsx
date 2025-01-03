@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname , useRouter , useSearchParams } from "next/navigation"
 import { Menu, X, ShoppingCart, List, User, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -33,7 +33,10 @@ interface NavbarProps{
 export default function Navbar({token , initialLists} : NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery , setSearchQuery] = useState("")
   const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [isListVisible , setIsListVisible] = useState(false)
 
@@ -51,6 +54,14 @@ export default function Navbar({token , initialLists} : NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  useEffect(() => {
+    const query = searchParams.get('q')
+    if(query){
+      setSearchQuery(query)
+      setIsSearchOpen(true)
+    }
+  } , [searchParams])
+
   const isHomePage = pathname === "/"
   const navBackground = isHomePage && !scrolled
     ? 'bg-transparent'
@@ -59,6 +70,23 @@ export default function Navbar({token , initialLists} : NavbarProps) {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     // Add your search logic here
+    // if(searchQuery.trim()){
+    //   router.push(`${pathname}?q=${encodeURIComponent(searchQuery.trim())}`)
+    // }else{
+    //   router.push(pathname)
+    // }
+    if(searchQuery.trim()){
+      const encodedQuery = encodeURIComponent(searchQuery.trim());
+      router.push(`/SearchPage/${encodedQuery}`);
+    }
+  }
+
+  const handleSearchInputChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setSearchQuery(value)
+    if(!value.trim()){
+      router.push(pathname)
+    }
   }
 
   const handleEditItem = (item : ListItem) => {
@@ -113,8 +141,10 @@ export default function Navbar({token , initialLists} : NavbarProps) {
                   <form onSubmit={handleSearch} className="flex w-full items-center">
                     <Input
                       type="search"
-                      placeholder="Search..."
+                      placeholder="Search Products ..."
                       className="flex-grow"
+                      value = {searchQuery}
+                      onChange={handleSearchInputChange}
                     />
                     <Button
                       type="submit"
@@ -194,9 +224,11 @@ export default function Navbar({token , initialLists} : NavbarProps) {
                 <form onSubmit={handleSearch} className="flex w-full items-center rounded-l-full rounded-r-full bg-[#E9E9E9]">
                   <Input
                     type="search"
-                    placeholder="Search..."
+                    placeholder="Search Products ..."
                     className={`border-0 focus-visible:ring-0 rounded-l-md ${isSearchOpen ? 'w-full pl-4' : 'w-0'}`}
                     disabled={!isSearchOpen}
+                    value = {searchQuery}
+                    onChange={handleSearchInputChange}
                   />
                   <Button
                     type="submit"
