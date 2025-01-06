@@ -134,8 +134,12 @@ class UserDetails(APIView):
 
     def get(self,request):
         user = request.user
+        # print(self.request.user)
         return Response({
             'username' : user.username
         })
+        
+        
+
     
 
