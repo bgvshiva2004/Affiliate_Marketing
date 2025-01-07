@@ -1,13 +1,21 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 
 export default function ProductCard({ product }){
+
+  const handleClick = (url) => {
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer')
+    }
+  }
+
   return (
     <Card className="group w-64 transition-all duration-300 hover:shadow-lg">
       <div className="relative">
-        <div className="aspect-[4/3] overflow-hidden rounded-t-lg">
+        <div className="aspect-[4/3] overflow-hidden rounded-t-lg" onClick={() => handleClick(product.product_link)}>
           <img
             src={product.imageUrl}
             alt={product.title}
@@ -33,11 +41,16 @@ export default function ProductCard({ product }){
         
         <div className="flex items-center justify-between pt-1">
           <p className="text-lg font-bold">
-            ${product.price.toFixed(2)}
+            {/* ${product.price.toFixed(2)} */}
+            ${product.price}
           </p>
-          <button className="rounded-md px-2 py-1 text-sm font-medium text-primary hover:bg-primary/10 transition-colors">
-            View Details
-          </button>
+          <Button 
+            variant="ghost" 
+            className="rounded-md px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 transition-colors"
+            onClick={() => handleClick(product.product_link)}
+          >
+            Buy Now
+          </Button>
         </div>
       </CardContent>
     </Card>

@@ -1,6 +1,6 @@
 'use client'
-import { motion } from "framer-motion"
-import { useState, useMemo } from "react"
+
+import { useState, useMemo , useEffect } from "react"
 import { CategorySection } from "@/components/Products/CatgeorySection"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
@@ -9,75 +9,98 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { SlidersHorizontal } from "lucide-react"
-import { Plus, X, List, Home, Edit, Search,ChevronUp } from 'lucide-react'
-const categories = [
-	{
-		name: "Electronics",
-		products: [
-			{ id: 1, title: "Smartphone X1", price: 699.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 2, title: "Laptop Pro", price: 1299.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
-			{ id: 3, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
-			{ id: 4, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
-			{ id: 5, title: "Tablet Ultra", price: 399.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 6, title: "Smartphone X1", price: 699.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 7, title: "Laptop Pro", price: 1299.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
-			{ id: 8, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
-			{ id: 9, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
-			{ id: 10, title: "Tablet Ultra", price: 399.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 11, title: "Smartphone X1", price: 699.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 12, title: "Laptop Pro", price: 1299.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
-			{ id: 13, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
-			{ id: 14, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
-			{ id: 15, title: "Tablet Ultra", price: 399.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 16, title: "Smartphone X1", price: 699.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-			{ id: 17, title: "Laptop Pro", price: 1299.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CompuTech", platform: "CompuMart" },
-			{ id: 18, title: "Wireless Noise-Canceling Headphones", price: 199.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "AudioPhile", platform: "SoundWave" },
-			{ id: 19, title: "Smartwatch Series 5", price: 249.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "WearableTech", platform: "GadgetWorld" },
-			{ id: 20, title: "Tablet Ultra", price: 399.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "TechCo", platform: "TechStore" },
-		],
-	},
-	{
-		name: "Clothing",
-		products: [
-			{ id: 6, title: "Classic Cotton T-Shirt", price: 19.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "ComfyWear", platform: "FashionHub" },
-			{ id: 7, title: "Slim Fit Jeans", price: 49.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "DenimCo", platform: "JeanScene" },
-			{ id: 8, title: "Running Sneakers", price: 79.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "SportyFeet", platform: "AthleticZone" },
-			{ id: 9, title: "Cozy Hoodie", price: 39.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "ComfyWear", platform: "FashionHub" },
-			{ id: 10, title: "Summer Floral Dress", price: 89.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "ChicStyles", platform: "TrendyThreads" },
-		],
-	},
-	{
-		name: "Home & Garden",
-		products: [
-			{ id: 11, title: "Programmable Coffee Maker", price: 89.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "BrewMaster", platform: "KitchenKing" },
-			{ id: 12, title: "High-Speed Blender", price: 59.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "KitchenPro", platform: "CookCentral" },
-			{ id: 13, title: "Ceramic Plant Pot Set", price: 24.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "GreenThumb", platform: "GardenGalore" },
-			{ id: 14, title: "Decorative Throw Pillow", price: 29.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "CozyHome", platform: "HomeHaven" },
-			{ id: 15, title: "Modern Table Lamp", price: 49.99, imageUrl: "/images/placeholder.svg?height=150&width=200", companyName: "LightItUp", platform: "IlluminateMe" },
-		],
-	},
-]
+import { getAllProducts } from "@/api"
+import { platform } from "os"
 
 export default function ProductsPage() {
 	const [searchTerm, setSearchTerm] = useState("")
 	const [selectedCategories, setSelectedCategories] = useState([])
+	const [selectedCountries, setSelectedCountries] = useState([])
+    const [selectedPlatforms, setSelectedPlatforms] = useState([])
 	const [minPrice, setMinPrice] = useState("")
 	const [maxPrice, setMaxPrice] = useState("")
+	const [products , setProducts] = useState([])
+	const [loading , setLoading] = useState(true)
+	const [error , setError] = useState(null)
 
-	const filteredCategories = useMemo(() => {
-		return categories.map(category => ({
-			...category,
-			products: category.products.filter(product => {
-				const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-					product.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-					product.platform.toLowerCase().includes(searchTerm.toLowerCase())
-				const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category.name)
-				const matchesPrice = (minPrice === "" || product.price >= parseFloat(minPrice)) &&
-					(maxPrice === "" || product.price <= parseFloat(maxPrice))
-				return matchesSearch && matchesCategory && matchesPrice
+	const loadProducts = async (filters = {}) => {
+		try {
+			// const data = await getAllProducts()
+			// setProducts(data)
+
+			setLoading(true)
+			const data = await getAllProducts(null,{
+				searchTerm: searchTerm,
+				categories: selectedCategories,
+				countries: selectedCountries,
+				platforms: selectedPlatforms,
+				min_price: minPrice || undefined,
+				max_price: maxPrice || undefined,
+				...filters
 			})
-		})).filter(category => category.products.length > 0)
-	}, [searchTerm, selectedCategories, minPrice, maxPrice])
+
+			setProducts(data)
+		} catch (error) {
+			console.error("Error loading products:", error)
+			setError('Failed to load products')
+		} finally {
+			setLoading(false)
+		}
+	}
+
+
+	useEffect(() => {
+        loadProducts()
+    }, [])
+
+	const uniqueCountries = useMemo(() => 
+        [...new Set(products.map(product => product.product_country))],
+        [products]
+    )
+
+    const uniquePlatforms = useMemo(() => 
+        [...new Set(products.map(product => product.product_platform))],
+        [products]
+    )
+
+	const categories = useMemo(() => {
+        const uniqueCategories = [...new Set(products.map(product => product.product_category))]
+        return uniqueCategories.map(name => ({
+            name,
+            products: products
+                .filter(p => p.product_category === name)
+                .map(p => ({
+                    id: p.id,
+                    title: p.product_name,
+                    price: p.product_price,
+                    imageUrl: p.product_image,
+                    companyName: p.product_country,
+                    platform: p.product_platform,
+					product_link: p.product_link
+                }))
+        }))
+    }, [products])
+
+    
+    const filteredCategories = useMemo(() => {
+        return categories.map(category => ({
+            ...category,
+            products: category.products.filter(product => {
+                const matchesSearch = !searchTerm || 
+                    product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    product.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    product.platform.toLowerCase().includes(searchTerm.toLowerCase())
+                const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category.name)
+                const matchesCountry = selectedCountries.length === 0 || selectedCountries.includes(product.companyName)
+                const matchesPlatform = selectedPlatforms.length === 0 || selectedPlatforms.includes(product.platform)
+                const matchesPrice = (minPrice === "" || product.price >= parseFloat(minPrice)) &&
+                    (maxPrice === "" || product.price <= parseFloat(maxPrice))
+                return matchesSearch && matchesCategory && matchesCountry && matchesPlatform && matchesPrice
+            })
+        })).filter(category => category.products.length > 0)
+    }, [searchTerm, selectedCategories, selectedCountries, selectedPlatforms, minPrice, maxPrice, categories])
+
+
 
 	const handleCategoryChange = (categoryName) => {
 		setSelectedCategories(prev =>
@@ -87,11 +110,43 @@ export default function ProductsPage() {
 		)
 	}
 
+	const handleCountryChange = (country) => {
+		setSelectedCountries(prev =>
+			prev.includes(country)
+				? prev.filter(c => c !== country)
+				: [...prev, country]
+		)
+	}
+
+	const handlePlatformChange = (platform) => {
+        setSelectedPlatforms(prev =>
+            prev.includes(platform)
+                ? prev.filter(p => p !== platform)
+                : [...prev, platform]
+        )
+    }
+
+	const applyFilters = () => {
+		loadProducts()
+	}
+
 	const clearFilters = () => {
 		setSelectedCategories([])
-		setMinPrice("")
-		setMaxPrice("")
+        setSelectedCountries([])
+        setSelectedPlatforms([])
+        setMinPrice("")
+        setMaxPrice("")
+        setSearchTerm("")
+        loadProducts()
 	}
+
+	if (loading) {
+        return <div className="text-center py-8">Loading products...</div>
+    }
+
+    if (error) {
+        return <div className="text-center py-8 text-red-500">{error}</div>
+    }
 
 	return (
 		<div className="">
@@ -124,14 +179,43 @@ export default function ProductsPage() {
 										{categories.map((category) => (
 											<div key={category.name} className="flex items-center space-x-2">
 												<Checkbox
-													id={category.name}
+													// id={category.name}
+													id = {`category-${category.name}`}
 													checked={selectedCategories.includes(category.name)}
 													onCheckedChange={() => handleCategoryChange(category.name)}
 												/>
-												<Label htmlFor={category.name}>{category.name}</Label>
+												<Label htmlFor={`category-${category.name}`}>{category.name}</Label>
 											</div>
 										))}
 									</div>
+									<div className="space-y-2">
+                                        <Label>Countries</Label>
+                                        {uniqueCountries.map((country) => (
+                                            <div key={country} className="flex items-center space-x-2">
+                                                <Checkbox
+                                                    id={`country-${country}`}
+                                                    checked={selectedCountries.includes(country)}
+                                                    onCheckedChange={() => handleCountryChange(country)}
+                                                />
+                                                <Label htmlFor={`country-${country}`}>{country}</Label>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label>Platforms</Label>
+                                        {uniquePlatforms.map((platform) => (
+                                            <div key={platform} className="flex items-center space-x-2">
+                                                <Checkbox
+                                                    id={`platform-${platform}`}
+                                                    checked={selectedPlatforms.includes(platform)}
+                                                    onCheckedChange={() => handlePlatformChange(platform)}
+                                                />
+                                                <Label htmlFor={`platform-${platform}`}>{platform}</Label>
+                                            </div>
+                                        ))}
+                                    </div>
+
 									<div>
 										<Label htmlFor="minPrice">Min Price</Label>
 										<Input
@@ -152,7 +236,11 @@ export default function ProductsPage() {
 											onChange={(e) => setMaxPrice(e.target.value)}
 										/>
 									</div>
-									<Button onClick={clearFilters}>Clear Filters</Button>
+									{/* <Button onClick={clearFilters}>Clear Filters</Button> */}
+									<div className="space-y-2">
+                                        <Button onClick={applyFilters} className="w-full">Apply Filters</Button>
+                                        <Button onClick={clearFilters} variant="outline" className="w-full">Clear Filters</Button>
+                                    </div>
 								</div>
 							</SheetContent>
 						</Sheet>

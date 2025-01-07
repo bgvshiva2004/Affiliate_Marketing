@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useEffect } from "react"
-import Image from "next/image"
 import ProductCard from './ProductCard'
 
 export function CategorySection({ id, name, products }) {

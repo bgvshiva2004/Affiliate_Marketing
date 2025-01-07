@@ -22,12 +22,13 @@ from rest_framework.views import APIView
 # Create your views here.
 class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
-    authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny]
+    # authentication_classes = [JWTAuthentication]
+    # # permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny]
     def get_queryset(self):
         print(self.request.user)
         queryset = ProductLinks.objects.all()
+        # print("queryset : ", queryset)
 
         search_query = self.request.query_params.get('q' , None)
         if search_query:
@@ -55,7 +56,7 @@ class ProductLinksAPI(ListAPIView):
             if max_price:
                 price_filters &= Q(product_price__lte=max_price)
             queryset = queryset.filter(price_filters)
-
+        # print("data sending")
         return queryset
 
 class UserListsAPI(ListCreateAPIView , RetrieveUpdateDestroyAPIView):
