@@ -1,15 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect , useMemo , useCallback } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 import { SlidersHorizontal, X } from "lucide-react"
 import { useParams } from 'next/navigation'
 import { getSearchProducts } from '@/api';
 import Image from 'next/image';
-import { Url } from 'next/dist/shared/lib/router/router'
 
 interface Product{
   id : number
@@ -25,15 +25,58 @@ interface Product{
 
 export default function SearchPage(){
 
-  const [products , setProducts] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [loading , setLoading] = useState(true);
   const [error ,setError] = useState<string | null>(null);
+  const [hoveredImageId, setHoveredImageId] = useState<number | null>(null)
+
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([])
+  const [selectedCountries, setSelectedCountries] = useState<string[]>([])
+  const [minPrice, setMinPrice] = useState<string>("")
+  const [maxPrice, setMaxPrice] = useState<string>("")
 
   const params = useParams();
   const searchQuery = params.query as string;
 
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [showFloatingButton, setShowFloatingButton] = useState(false)
+
+  const uniqueCategories = useMemo(() => 
+    Array.from(new Set(allProducts.map(product => product.product_category))),
+    [allProducts]
+  )
+
+  const uniquePlatforms = useMemo(() => 
+    Array.from(new Set(allProducts.map(product => product.product_platform))),
+    [allProducts]
+  )
+
+  const uniqueCountries = useMemo(() => 
+    Array.from(new Set(allProducts.map(product => product.product_country))),
+    [allProducts]
+  )
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true)
+      const results = await getSearchProducts(decodeURIComponent(searchQuery), null, {})
+      setAllProducts(results)
+      setFilteredProducts(results)
+    } catch (err) {
+      setError('Failed to fetch search results')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (searchQuery) {
+      loadProducts()
+    }
+  }, [searchQuery])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,26 +87,60 @@ export default function SearchPage(){
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      try{
-        setLoading(true);
-        const results = await getSearchProducts(decodeURIComponent(searchQuery));
-        setProducts(results);
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategories(prev =>
+      prev.includes(category)
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    )
+  }
 
-        // console.log("results : ",results)
-      }catch(err){
-        setError('Failed to fetch search results');
-        console.error(err);
-      }finally{
-        setLoading(false);
-      }
-    };
+  const handlePlatformChange = (platform: string) => {
+    setSelectedPlatforms(prev =>
+      prev.includes(platform)
+        ? prev.filter(p => p !== platform)
+        : [...prev, platform]
+    )
+  }
 
-    if(searchQuery){
-      fetchSearchResults();
-    }
-  } , [searchQuery]);
+  const handleCountryChange = (country: string) => {
+    setSelectedCountries(prev =>
+      prev.includes(country)
+        ? prev.filter(c => c !== country)
+        : [...prev, country]
+    )
+  }
+
+  const handleProductClick = (link: string) => {
+    window.open(link, '_blank')
+  }
+
+  const applyFilters = () => {
+    const filtered = allProducts.filter(product => {
+      const matchesCategory = selectedCategories.length === 0 || 
+        selectedCategories.includes(product.product_category)
+      const matchesPlatform = selectedPlatforms.length === 0 || 
+        selectedPlatforms.includes(product.product_platform)
+      const matchesCountry = selectedCountries.length === 0 || 
+        selectedCountries.includes(product.product_country)
+      const matchesPrice = (!minPrice || product.product_price >= parseFloat(minPrice)) &&
+        (!maxPrice || product.product_price <= parseFloat(maxPrice))
+
+      return matchesCategory && matchesPlatform && matchesCountry && matchesPrice
+    })
+    
+    setFilteredProducts(filtered)
+    setIsFilterOpen(false)
+  }
+
+  const clearFilters = () => {
+    setSelectedCategories([])
+    setSelectedPlatforms([])
+    setSelectedCountries([])
+    setMinPrice("")
+    setMaxPrice("")
+    setFilteredProducts(allProducts)
+  }
 
   if (loading) {
     return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
@@ -84,16 +161,23 @@ export default function SearchPage(){
       </header>
 
       <div className="grid grid-cols-1 gap-4 px-10">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <Card key={product.id} className="overflow-hidden shadow-[0px_0px_10px_0px] shadow-gray-400">
             <div className="flex flex-col sm:flex-row h-64 sm:h-52">
-              <div className="sm:w-1/3 h-full">
+              <div
+               className="sm:w-1/3 h-full cursor-pointer relative overflow-hidden"
+               onClick={() => handleProductClick(product.product_link)}
+               onMouseEnter={() => setHoveredImageId(product.id)}
+               onMouseLeave={() => setHoveredImageId(null)}
+               >
                 <Image
                   src={product.product_image}
                   alt={product.product_name}
                   width={300}
                   height={300}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover transition-transform duration-300 ${
+                    hoveredImageId === product.id ? 'scale-110' : 'scale-100'
+                  }`}
                 />
               </div>
               <div className="sm:w-2/3 p-4 flex flex-col justify-between">
@@ -108,7 +192,7 @@ export default function SearchPage(){
                 <div className="mt-2">
                   <Button
                    className="w-full sm:w-auto text-sm py-1"
-                   onClick={() => window.open(product.product_link, '_blank')}
+                   onClick={() => handleProductClick(product.product_link)}
                    >Buy Now</Button>
                 </div>
               </div>
@@ -149,9 +233,13 @@ export default function SearchPage(){
           <div>
             <h3 className="font-semibold mb-2">Categories</h3>
             <div className="space-y-2">
-              {['Electronics', 'Wearables', 'Audio', 'Gaming'].map((category) => (
+              {uniqueCategories.map((category) => (
                 <div key={category} className="flex items-center">
-                  <Checkbox id={`category-${category}`} />
+                  <Checkbox 
+                    id={`category-${category}`} 
+                    checked={selectedCategories.includes(category)}
+                    onCheckedChange={() => handleCategoryChange(category)}
+                  />
                   <Label htmlFor={`category-${category}`} className="ml-2">
                     {category}
                   </Label>
@@ -163,9 +251,13 @@ export default function SearchPage(){
           <div>
             <h3 className="font-semibold mb-2">Platforms</h3>
             <div className="space-y-2">
-              {['PC', 'Mobile', 'TV', 'Console'].map((platform) => (
+              {uniquePlatforms.map((platform) => (
                 <div key={platform} className="flex items-center">
-                  <Checkbox id={`platform-${platform}`} />
+                  <Checkbox
+                   id={`platform-${platform}`} 
+                   checked={selectedPlatforms.includes(platform)}
+                   onCheckedChange={()=> handlePlatformChange(platform)}
+                   />
                   <Label htmlFor={`platform-${platform}`} className="ml-2">
                     {platform}
                   </Label>
@@ -177,9 +269,13 @@ export default function SearchPage(){
           <div>
             <h3 className="font-semibold mb-2">Countries</h3>
             <div className="space-y-2">
-              {['India', 'USA', 'UK', 'Canada'].map((country) => (
+              {uniqueCountries.map((country) => (
                 <div key={country} className="flex items-center">
-                  <Checkbox id={`country-${country}`} />
+                  <Checkbox
+                   id={`country-${country}`} 
+                   checked={selectedCountries.includes(country)}
+                   onCheckedChange={()=> handleCountryChange(country)}
+                   />
                   <Label htmlFor={`country-${country}`} className="ml-2">
                     {country}
                   </Label>
@@ -189,7 +285,34 @@ export default function SearchPage(){
           </div>
         </div>
 
-        <Button className="w-full mt-6">Apply Filters</Button>
+        <div className="space-y-2">
+            <div>
+              <Label htmlFor="minPrice">Min Price</Label>
+              <Input
+                id="minPrice"
+                type="number"
+                placeholder="Min Price"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="maxPrice">Max Price</Label>
+              <Input
+                id="maxPrice"
+                type="number"
+                placeholder="Max Price"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+              />
+            </div>
+          </div>
+        
+
+        <div className="space-y-2 mt-6">
+          <Button className="w-full" onClick={applyFilters}>Apply Filters</Button>
+          <Button className="w-full" variant="outline" onClick={clearFilters}>Clear Filters</Button>
+        </div>
       </div>
     </div>
   )
