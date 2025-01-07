@@ -64,7 +64,7 @@ export default function ProductCatalog() {
                   <p className="text-xs text-gray-600">Platform: {product.platform}</p>
                 </div>
                 <div className="mt-2">
-                  <Button className="w-full sm:w-auto text-sm py-1">Add to Cart</Button>
+                  <Button className="w-full sm:w-auto text-sm py-1">Buy Now</Button>
                 </div>
               </div>
             </div>

@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { SlidersHorizontal } from "lucide-react"
 import { Plus, X, List, Home, Edit, Search,ChevronUp } from 'lucide-react'
+import ReactSlider from 'react-slider'
+
+
 const categories = [
 	{
 		name: "Electronics",
@@ -57,12 +60,10 @@ const categories = [
 		],
 	},
 ]
-
 export default function ProductsPage() {
 	const [searchTerm, setSearchTerm] = useState("")
 	const [selectedCategories, setSelectedCategories] = useState([])
-	const [minPrice, setMinPrice] = useState("")
-	const [maxPrice, setMaxPrice] = useState("")
+	const [priceRange, setPriceRange] = useState([0, 2000]) // Default range for price (min, max)
 
 	const filteredCategories = useMemo(() => {
 		return categories.map(category => ({
@@ -72,12 +73,11 @@ export default function ProductsPage() {
 					product.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
 					product.platform.toLowerCase().includes(searchTerm.toLowerCase())
 				const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category.name)
-				const matchesPrice = (minPrice === "" || product.price >= parseFloat(minPrice)) &&
-					(maxPrice === "" || product.price <= parseFloat(maxPrice))
+				const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1]
 				return matchesSearch && matchesCategory && matchesPrice
 			})
 		})).filter(category => category.products.length > 0)
-	}, [searchTerm, selectedCategories, minPrice, maxPrice])
+	}, [searchTerm, selectedCategories, priceRange])
 
 	const handleCategoryChange = (categoryName) => {
 		setSelectedCategories(prev =>
@@ -89,15 +89,14 @@ export default function ProductsPage() {
 
 	const clearFilters = () => {
 		setSelectedCategories([])
-		setMinPrice("")
-		setMaxPrice("")
+		setPriceRange([0, 2000])
 	}
 
 	return (
 		<div className="">
-			
-			<div id="ProductsPage" className=" h-[70vh] mx-auto  px-4 py-8 border-0 border-red-500 ">
-				<div className="flex flex-col  mb-8 ">
+
+			<div id="ProductsPage" className=" h-[70vh] mx-auto px-4 py-8 border-0 border-red-500 ">
+				<div className="flex flex-col mb-8 ">
 					<h1 className="text-3xl font-bold">Our Products</h1>
 					<div className="flex items-center space-x-4 ">
 						<Input
@@ -132,33 +131,32 @@ export default function ProductsPage() {
 											</div>
 										))}
 									</div>
+
+									{/* Price Range Slider */}
 									<div>
-										<Label htmlFor="minPrice">Min Price</Label>
-										<Input
-											id="minPrice"
-											type="number"
-											placeholder="Min Price"
-											value={minPrice}
-											onChange={(e) => setMinPrice(e.target.value)}
+										<Label>Price Range</Label>
+										<ReactSlider
+											value={priceRange}
+											onChange={setPriceRange}
+											className="w-full h-2 bg-gray-200"
+											thumbClassName="w-6 h-6 bg-blue-500 rounded-full"
+											min={0}
+											max={2000}
+											ariaLabel={['min price', 'max price']}
 										/>
+										<div className="flex justify-between mt-2">
+											<span>{priceRange[0]}</span>
+											<span>{priceRange[1]}</span>
+										</div>
 									</div>
-									<div>
-										<Label htmlFor="maxPrice">Max Price</Label>
-										<Input
-											id="maxPrice"
-											type="number"
-											placeholder="Max Price"
-											value={maxPrice}
-											onChange={(e) => setMaxPrice(e.target.value)}
-										/>
-									</div>
+
 									<Button onClick={clearFilters}>Clear Filters</Button>
 								</div>
 							</SheetContent>
 						</Sheet>
 					</div>
 				</div>
-				<ScrollArea className="h-[calc(100vh-12rem)] bg-white" >
+				<ScrollArea className="h-[calc(100vh-12rem)] bg-white">
 					{filteredCategories.map((category, index) => (
 						<CategorySection
 							id={index}
