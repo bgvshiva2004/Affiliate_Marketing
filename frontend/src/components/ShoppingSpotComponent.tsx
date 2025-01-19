@@ -1,33 +1,30 @@
 import { motion, useAnimation } from 'framer-motion'
 import { ChevronUp, ChevronDown } from 'lucide-react'
 import ProductsPage from '@/app/@products/ProductsPage'
+import { AnimationControls } from "framer-motion";
 
-interface ShoppingSpotProps { 
-    isOpen : boolean;
-    setIsOpen : (isOpen: boolean) => void;
+interface DragEventInfo {
+    offset: {
+      y: number;
+    };
+  }
+
+interface ShoppingSpotProps {
+    isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  controls: AnimationControls;
+  handleDragEnd: (event: any, info: DragEventInfo) => void;
+  toggleDrawer: () => void;
+  className:string;
 }
 
-export const ShoppingSpot = ({isOpen , setIsOpen} : ShoppingSpotProps) => {
-    const controls = useAnimation()
 
-    const handleDragEnd = (event : any, info : any) => {
-        if (info.offset.y < -50) {
-            setIsOpen(true)
-            controls.start({ height: '80vh' })
-        } else if (info.offset.y > 50) {
-            setIsOpen(false)
-            controls.start({ height: '0px' })
-        }
-    }
+export const ShoppingSpot = ({isOpen , setIsOpen,controls,handleDragEnd,toggleDrawer,className} : ShoppingSpotProps) => {
     
-    const toggleDrawer = () => {
-    setIsOpen(!isOpen)
-    controls.start({ height: isOpen ? '0px' : '80vh' })
-    }
-
+    
     return (
         <motion.div
-            className="fixed bottom-0 left-0 right-0 shadow-lg z-[10000]"
+            className={`fixed bottom-0 left-0 right-0 shadow-lg z-[10000] ${className}`}
             initial={{ height: '0px' }}
             animate={controls}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}

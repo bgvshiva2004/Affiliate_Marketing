@@ -70,7 +70,7 @@
   }
 
   export function getAllNotes(token = null, params = {}, options = {}) {
-    return apiCall('notes', params, token, options);
+    return apiCall('lists', params, token, options);
   }
 
   export function getSearchProducts(query , token = null, params = {} , options = {}){

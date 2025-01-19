@@ -48,7 +48,7 @@ export default function HomePage({
   const [isListVisible, setIsListVisible] = useState<boolean>(false);
   const [editingItem, setEditingItem] = useState<ListItem | null>(null);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  
   const controls = useAnimation();
 
   const [lists, setLists] = useState<ListItem[]>(initialLists);
@@ -147,10 +147,8 @@ export default function HomePage({
   return (
     <div className="relative min-h-screen overflow-hidden">
       <div
-        id={isOpen ? "background" : ""}
-        className={`h-full w-full border-0 border-red-500 ${
-          isOpen ? "!z-[100]" : "!z-[-1]"
-        }`}
+        
+        className={`h-full w-full border-0 border-red-500`}
         style={{ backdropFilter: "blur(5px)" }}
       ></div>
       <div className="relative bg-gradient-to-br from-gray-50 to-gray-100">
@@ -290,7 +288,7 @@ export default function HomePage({
         />
 
         {/* ShoppingSpot Component */}
-        <ShoppingSpot isOpen={isOpen} setIsOpen={setIsOpen} />
+       
 
         <style jsx>{`
           @keyframes waveAnimation {
