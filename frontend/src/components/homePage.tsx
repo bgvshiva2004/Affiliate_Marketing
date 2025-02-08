@@ -48,7 +48,6 @@ export default function HomePage({
   const [isListVisible, setIsListVisible] = useState<boolean>(false);
   const [editingItem, setEditingItem] = useState<ListItem | null>(null);
 
-  
   const controls = useAnimation();
 
   const [lists, setLists] = useState<ListItem[]>(initialLists);
@@ -142,49 +141,58 @@ export default function HomePage({
   const handleCloseModal = useCallback(async () => {
     setIsModalOpen(false);
     setEditingItem(null);
-  },[]);
+  }, []);
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div
+      className="relative min-h-screen overflow-hidden"
+      style={{
+        background: 'radial-gradient(circle, #027cc4, #FFFFFF)',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      }}
+    >
       <div
-        
         className={`h-full w-full border-0 border-red-500`}
         style={{ backdropFilter: "blur(5px)" }}
       ></div>
-      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="relative">
         <ToastContainer position="bottom-right" autoClose={3000} />
 
         {/* Main content */}
         <div
           className={`flex flex-col z-[10] min-h-screen ${
             isListVisible ? "blur-sm" : ""
-          } transition-all duration-300 z-[10]`}
+          } transition-all duration-300`}
         >
-          <div className="flex flex-col lg:flex-row flex-grow w-full h-full items-center justify-center">
-            {/* Right side - Text */}
-            <div className="w-full p-4 sm:p-8 lg:p-12 flex flex-col justify-center items-center py-auto ">
-              <div className="p-4 sm:p-6 lg:p-8 rounded-lg transition-all fade-in-out shadow-2xl max-w-xl w-full relative z-[100]">
+          <div className="flex flex-col lg:flex-row flex-grow w-full h-full items-center justify-center ">
+            {/* Right side - Compact Logo Container */}
+            <div className="w-full p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center ">
+              <div className="p-3 sm:p-4 lg:p-6 rounded-lg transition-all fade-in-out shadow-2xl max-w-lg w-full relative z-[100] flex flex-col items-center ">
+                {/* Background Blur Effect */}
                 <div
                   id="background"
                   className="!z-[-100] !brightness-100 !left-0 !top-0 items-center"
                   style={{ backdropFilter: "blur(20px)" }}
                 ></div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-black z-[100] text-center">
-                  Affiliate Marketing
-                </h1>
-                <p className="text-base sm:text-lg lg:text-xl text-black z-[100] text-center">
-                  Discover the ultimate ease in shopping through multiple
-                  platforms on this single webpage exclusively built for you !!
-                </p>
-                <div className="items-center text-center">
-                  <Button
-                    className="mt-4 sm:mt-6 lg:mt-8 bg-black hover:bg-gray-800 text-white w-full sm:w-auto text-center"
-                    size="lg"
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    Get Started
-                  </Button>
-                </div>
+
+                {/* "AuraGen" Text (With Custom Shadow Effect) */}
+                <span className="text-transparent text-3xl sm:text-4xl lg:text-5xl font-bold aura-text">
+                  AuraGen
+                </span>
+
+                {/* Logo Image (Compact) */}
+                <img
+                  src="/images/logo.png"
+                  alt="Logo"
+                  className="max-w-[60%] max-h-[60%] object-contain"
+                />
+
+                {/* Subtitle Text (Compact & Centered) */}
+                <span className="text-white text-sm sm:text-base lg:text-lg text-center">
+                  Discover the utlimate ease in Shopping
+                </span>
               </div>
             </div>
           </div>
@@ -193,7 +201,7 @@ export default function HomePage({
         {/* Animated diagonal wave background */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <svg
-            className="absolute z-0 top-0 left-0 w-[200%] h-[200%] pointer-events-none opacity-20"
+            className="absolute z-0 top-0 left-0 w-[200%] h-[200%] pointer-events-none opacity-100"
             viewBox="0 0 1440 320"
             preserveAspectRatio="none"
           >
@@ -205,8 +213,19 @@ export default function HomePage({
                 x2="100%"
                 y2="100%"
               >
-                <stop offset="0%" stopColor="#333333" />
-                <stop offset="100%" stopColor="#666666" />
+                
+                <stop offset="0%" stopColor="#87CEEB" />
+                <stop offset="100%" stopColor="#FFFFFF" />
+
+                {/* <stop offset="0%" stopColor="#FFD1DC" />{" "}            
+                <stop offset="12%" stopColor="#FFB6B6" /> 
+                <stop offset="28%" stopColor="#FFB6A3" /> 
+                <stop offset="43%" stopColor="#FFFACD" /> 
+                <stop offset="58%" stopColor="#90EE90" /> 
+                <stop offset="73%" stopColor="#87CEEB" /> 
+                <stop offset="88%" stopColor="#9B7CB9" /> 
+                <stop offset="100%" stopColor="#B19CD9" />{" "} */}
+              
               </linearGradient>
             </defs>
             <g className="wave-group">
@@ -228,7 +247,7 @@ export default function HomePage({
             initialLists={lists}
             onClose={() => setIsListVisible(false)}
             onEditItem={handleEditItem}
-            isModalOpen = {isModalOpen}
+            isModalOpen={isModalOpen}
           />
         )}
 
@@ -238,7 +257,7 @@ export default function HomePage({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  className="rounded-full w-12 h-12 p-0 shadow-lg hover:shadow-xl transition-shadow bg-black hover:bg-gray-800 text-white"
+                  className="rounded-full w-12 h-12 p-0 shadow-lg hover:shadow-xl transition-shadow bg-[#0355bb] hover:bg-white text-white hover:text-[#0355bb]"
                   onClick={() => {
                     if (isLoggedIn) {
                       setEditingItem(null);
@@ -251,7 +270,7 @@ export default function HomePage({
                   <Plus className="w-6 h-6" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className="bg-[#0355bb] text-white">
                 <p>Add new List</p>
               </TooltipContent>
             </Tooltip>
@@ -261,7 +280,7 @@ export default function HomePage({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  className="rounded-full w-12 h-12 p-0 shadow-lg hover:shadow-xl transition-shadow bg-black hover:bg-gray-800 text-white"
+                  className="rounded-full w-12 h-12 p-0 shadow-lg hover:shadow-xl transition-shadow bg-[#0355bb] hover:bg-white text-white hover:text-[#0355bb]"
                   onClick={toggleListVisibility}
                 >
                   {isListVisible ? (
@@ -271,7 +290,7 @@ export default function HomePage({
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent className="bg-[#0355bb] text-white">
                 <p>{isListVisible ? "Return to Home" : "View List"}</p>
               </TooltipContent>
             </Tooltip>
@@ -288,7 +307,6 @@ export default function HomePage({
         />
 
         {/* ShoppingSpot Component */}
-       
 
         <style jsx>{`
           @keyframes waveAnimation {
@@ -324,6 +342,29 @@ export default function HomePage({
 
           .wave {
             animation: waveAnimation 20s ease-in-out infinite;
+          }
+        `}</style>
+
+        <style jsx>{`
+          .aura-text {
+            color: white; /* Pure white text */
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+            font-size: 1.5rem; /* Equivalent to text-lg */
+            font-weight: bold;
+          }
+
+          @media (min-width: 640px) {
+            /* sm breakpoint */
+            .aura-text {
+              font-size: 2rem; /* text-4xl */
+            }
+          }
+
+          @media (min-width: 1024px) {
+            /* lg breakpoint */
+            .aura-text {
+              font-size: 3rem; /* text-5xl */
+            }
           }
         `}</style>
       </div>

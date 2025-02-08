@@ -207,4 +207,11 @@ body {
 }
 
 
+.text-gradient {
+  background:  #0610ab;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+
  
