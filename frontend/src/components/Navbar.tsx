@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Menu, X, ShoppingCart, List, User, Search } from 'lucide-react'
+import { Menu, X, ShoppingCart, List, User, Search } from 'lucide-react'  // Importing from lucide-react
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -45,7 +45,6 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<ListItem | null>(null)
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const token = Cookies.get('access')
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,12 +70,6 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Add your search logic here
-    // if(searchQuery.trim()){
-    //   router.push(`${pathname}?q=${encodeURIComponent(searchQuery.trim())}`)
-    // }else{
-    //   router.push(pathname)
-    // }
     if (searchQuery.trim()) {
       const encodedQuery = encodeURIComponent(searchQuery.trim());
       router.push(`/SearchPage/${encodedQuery}`);
@@ -145,34 +138,20 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
           <div className="flex justify-between items-center py-4  md:space-x-10">
             <div className="flex justify-start lg:w-0 lg:flex-1">
               <Link href="/" className="flex items-center space-x-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-8 h-8 text-primary"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"
-                  />
-                </svg>
-                <span className="text-xl font-bold text-primary">Aone</span>
+                <span className="text-xl font-bold text-[#0355bb] hover:text-black">AuraGen</span>
               </Link>
             </div>
             <div className="-mr-2 -my-2 md:hidden !z-[100000]">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-primary">
+                  <Button variant="ghost" size="icon" className="text-[#0355bb] hover:text-black">
                     <Menu className="h-6 w-6" />
                     <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px] !z-[100000]">
                   <SheetHeader>
-                    <SheetTitle>Menu</SheetTitle>
+                    <SheetTitle className="text-[#0355bb]">Menu</SheetTitle>
                   </SheetHeader>
                   <div className="mt-6 flex flex-col space-y-4">
                     <form onSubmit={handleSearch} className="flex w-full items-center">
@@ -189,26 +168,23 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                         size="icon"
                         className="ml-2"
                       >
-                        <Search className="h-4 w-4" />
+                        <Search className="h-4 w-4 text-[#0355bb]" />
                         <span className="sr-only">Submit search</span>
                       </Button>
                     </form>
                     <SheetClose asChild>
-                      <Link href="/" className="text-base font-medium text-gray-900 hover:text-primary">
+                      <Link href="/" className="text-base font-medium text-[#0355bb] hover:text-black">
                         Home
                       </Link>
                     </SheetClose>
                     <SheetClose asChild>
                       <button onClick={() => {
                         toggleDrawer()
-                      }} className="text-base font-medium text-gray-900 hover:text-primary">
+                      }} className="text-base font-medium text-[#0355bb] hover:text-black">
                         Products
                       </button>
                     </SheetClose>
                     <SheetClose asChild>
-                      {/* <Link href="/list" className="text-base font-medium text-gray-900 hover:text-primary">
-                      List
-                    </Link> */}
                       <button
                         onClick={() => {
                           if (!token) {
@@ -217,13 +193,13 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                             setIsListVisible(true);
                           }
                         }}
-                        className="text-base font-medium text-gray-500 hover:text-primary"
+                        className="text-base font-medium text-[#0355bb] hover:text-black"
                       >
                         List
                       </button>
                     </SheetClose>
                     <SheetClose asChild>
-                      <Link href="/profile" className="text-base font-medium text-gray-900 hover:text-primary">
+                      <Link href="/profile" className="text-base font-medium text-[#0355bb] hover:text-black">
                         Account
                       </Link>
                     </SheetClose>
@@ -232,17 +208,14 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
               </Sheet>
             </div>
             <nav className="hidden md:flex space-x-10">
-              <Link href="/" className="text-base font-medium text-gray-500 hover:text-primary">
+              <Link href="/" className="text-base font-medium text-[#0355bb] hover:text-black">
                 Home
               </Link>
               <button onClick={() => {
                 toggleDrawer()
-              }} className="text-base font-medium text-gray-500 hover:text-primary">
+              }} className="text-base font-medium text-[#0355bb] hover:text-black">
                 Products
               </button>
-              {/* <Link href="/list" className="text-base font-medium text-gray-500 hover:text-primary">
-              List
-            </Link> */}
               <button
                 onClick={() => {
                   if (!token) {
@@ -251,7 +224,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                     setIsListVisible(true);
                   }
                 }}
-                className="text-base font-medium text-gray-500 hover:text-primary"
+                className="text-base font-medium text-[#0355bb] hover:text-black"
               >
                 List
               </button>
@@ -277,7 +250,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                       size="icon"
                       className="h-10 rounded-r-full"
                     >
-                      <Search className="h-4 w-4 rounded-full" />
+                      <Search className="h-4 w-4 text-[#0355bb]" />
                       <span className="sr-only">Submit search</span>
                     </Button>
                   </form>
@@ -285,20 +258,20 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-primary relative z-10"
+                  className="text-[#0355bb] hover:text-black relative z-10"
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
                   aria-label={isSearchOpen ? 'Close search' : 'Open search'}
                 >
                   {isSearchOpen ? (
-                    <X className="h-6 w-6" />
+                    <X className="h-6 w-6 text-[#0355bb]" />
                   ) : (
-                    <Search className="h-6 w-6" />
+                    <Search className="h-6 w-6 text-[#0355bb]" />
                   )}
                 </Button>
               </div>
               <Link href="/profile">
-                <Button variant="ghost" size="icon" className="text-primary ml-4">
-                  <User className="h-6 w-6" />
+                <Button variant="ghost" size="icon" className="text-[#0355bb] hover:text-black ml-4">
+                  <User className="h-6 w-6 text-[#0355bb]" />
                   <span className="sr-only">User profile</span>
                 </Button>
               </Link>
@@ -313,7 +286,6 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
           token={token}
           initialLists={initialLists}
           onClose={() => setIsListVisible(false)}
-          // onEditItem={(item) => console.log("Edit item : ", item)}
           onEditItem={handleEditItem}
           isModalOpen={isModalOpen}
         />
@@ -329,7 +301,6 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
         />
       )}
 
-
       <ModalComponent
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -337,8 +308,6 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
         editingItem={editingItem}
         onItemSaved={handleItemSaved}
       />
-
     </>
   )
 }
-

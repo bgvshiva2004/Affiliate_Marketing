@@ -81,68 +81,41 @@ export function CategorySection({ id, name, products }) {
 	}, [id]);
 
 	return (
-		<div className="">
-			<h1 className="m-2 text-xl font-bold">{name}</h1>
-			<div className="grid-container">
-				
-				<main className="grid-item main">
-					<div className={`items${id} items`}>
-						{products.map((product) => (
-							<div
-								key={product.id}
-								className={`item mx-2`}
-							>
-								<ProductCard product={product} />
-							</div>
-						))}
-					</div>
-				</main>
-			</div>
-			{/* <h2 className="section-title">{name}</h2>
-      <div
-        className="items-container items"
-      >
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className={`item item${product.id}`}
-          >
-            <Image
-              src={product.imageUrl}
-              alt={product.title}
-              width={256}
-              height={160}
-              className="item-image"
-            />
-            <div className="item-details">
-              <h3 className="item-title">{product.title}</h3>
-              <p className="item-company">{product.companyName}</p>
-              <p className="item-platform">{product.platform}</p>
-              <p className="item-price">${product.price.toFixed(2)}</p>
-            </div>
-          </div>
-        ))}
-      </div> */}
-
-<style jsx>{`
-				.items${id} {
-					overflow-x: hidden; /* Hide horizontal scrollbar */
-				}
-
-				.grid-container {
-					overflow-x: hidden; /* Ensure the entire container hides horizontal scroll */
-				}
-
-				/* Optionally, you can hide scrollbars globally or on specific containers */
-				* {
-					scrollbar-width: none;  /* Firefox */
-					-ms-overflow-style: none; /* Internet Explorer 10+ */
-				}
-
-				*::-webkit-scrollbar {
-					display: none; /* Hide scrollbar for Webkit-based browsers */
-				}
-			`}</style>
+		<div className="w-full">
+		  <h1 className="text-xl font-bold text-[#0355bb]">{name}</h1>
+		  <div className="grid-container w-full mb-3">
+			<main className="grid-item main w-full">
+			  <div className={`items${id} items flex gap-4 overflow-x-auto`}>
+				{products.map((product) => (
+				  <div
+					key={product.id}
+					className="item flex-shrink-0"
+				  >
+					<ProductCard product={product} />
+				  </div>
+				))}
+			  </div>
+			</main>
+		  </div>
+	
+		  <style jsx>{`
+			.items${id} {
+			  overflow-x: hidden;
+			}
+	
+			.grid-container {
+			  overflow-x: hidden;
+			}
+	
+			* {
+			  scrollbar-width: none;
+			  -ms-overflow-style: none;
+			}
+	
+			*::-webkit-scrollbar {
+			  display: none;
+			}
+		  `}</style>
 		</div>
-	)
+	  );
 }
