@@ -20,35 +20,43 @@ from rest_framework.views import APIView
 
 
 # Create your views here.
+from django.db.models import Q
+
 class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
     # authentication_classes = [JWTAuthentication]
-    # # permission_classes = [IsAuthenticated]
-    # permission_classes = [AllowAny]
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
     def get_queryset(self):
         print(self.request.user)
-        queryset = ProductLinks.objects.all()
-        # print("queryset : ", queryset)
 
-        search_query = self.request.query_params.get('q' , None)
-        if search_query:
-            queryset = queryset.filter(
-                Q(product_name__icontains=search_query) |
-                Q(product_description__icontains=search_query)
-            )
-            return queryset
-        
+        # Get all products
+        queryset = ProductLinks.objects.all()
+
+        # Get search parameters
+        search_query = self.request.query_params.get('q', None)
         product_id = self.request.query_params.get('id', None)
         product_name = self.request.query_params.get('product_name', None)
         min_price = self.request.query_params.get('min_price', None)
         max_price = self.request.query_params.get('max_price', None)
 
+        # Filter by search query
+        if search_query:
+            queryset = queryset.filter(
+                Q(product_name__icontains=search_query) |
+                Q(product_description__icontains=search_query)
+            )
+
+        # Filter by product ID
         if product_id:
             queryset = queryset.filter(id=product_id)
 
+        # Filter by product name
         if product_name:
             queryset = queryset.filter(product_name__icontains=product_name)
 
+        # Filter by price range
         if min_price or max_price:
             price_filters = Q()
             if min_price:
@@ -56,8 +64,30 @@ class ProductLinksAPI(ListAPIView):
             if max_price:
                 price_filters &= Q(product_price__lte=max_price)
             queryset = queryset.filter(price_filters)
-        # print("data sending")
-        return queryset
+
+        # Get recommended products for the user and prioritize them
+        if self.request.user.is_authenticated:
+            try:
+                # Fetch user's profile and recommended products
+                user_profile = UserProfile.objects.get(user=self.request.user)
+                recommended_products = user_profile.recommended_products.all()
+
+                # Combine recommended products with remaining products
+                recommended_ids = recommended_products.values_list('id', flat=True)
+                non_recommended_products = queryset.exclude(id__in=recommended_ids)
+
+                # Concatenate recommended products at the top, followed by others
+                final_queryset = (
+                    recommended_products.distinct() | non_recommended_products.distinct()
+                )
+                return final_queryset
+
+            except UserProfile.DoesNotExist:
+                print("User profile not found, returning all products.")
+
+        # If user is not authenticated or no recommendations exist, return all products
+        return queryset.distinct()
+
 
 class UserListsAPI(ListCreateAPIView , RetrieveUpdateDestroyAPIView):
     queryset = UserLists.objects.all()
@@ -88,20 +118,28 @@ class UserListsAPI(ListCreateAPIView , RetrieveUpdateDestroyAPIView):
 
 @api_view(['POST'])
 def signup(request):
-
-    serializer = UserSerializer(data = request.data)
+    serializer = UserSerializer(data=request.data)
+    
     if serializer.is_valid():
-        serializer.save()
-        
-        user = User.objects.get(username = request.data['username'])
-        user.set_password(request.data['password'])
+        user = serializer.save()
+        user.set_password(request.data['password'])  
         user.save()
 
-        token = Token.objects.create(user = user)
+        token = Token.objects.create(user=user)
 
-        return Response({"token" : token.key , "user" : serializer.data})
+        hobbies = request.data.get('hobbies', None)
+        age = request.data.get('age', None)
+
+        UserLists.objects.create(
+            user=user,
+            hobbies=hobbies,
+            age=age,
+        )
+
+        return Response({"token": token.key, "user": serializer.data})
     
-    return Response(serializer.errors , status = status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['POST'])
@@ -140,6 +178,16 @@ class UserDetails(APIView):
             'username' : user.username
         })
         
+
+# if the user is not logged in then display all the products 
+    
+# if logged in if old list is already there and a new list is been added then filter out the products from the list elements and then add the products as recommended products for the user, if the user did not add any list then display all products , if recommended products are present then display them at the top else display all the products in any order
+    
+# once i get the list items , use groq api call and make the items list in an array , then search the items from the db , do partial searching and once thats do then add the recommended products list with the products , recommended products list is a many to many field to products , 
+    
+# the above algorithm must run when a new product gets added then again groq api call will make it into an array of products and then it will be partial searched in db and then those will get added
+    
+# update the get products api call and display the check if there are any recommended products present , if present display them at the top and display all other unique products at the bottom, if there are no recommended products then display all the products , if the user is not logged in display all the products
         
 
     
