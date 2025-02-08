@@ -141,7 +141,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
   return (
     <>
       <nav
-        className={`fixed w-full top-0 transition-all duration-300 !z-[999999] ${navBackground}`}
+        className={`fixed w-full top-0 transition-all duration-300 !z-[100000] ${navBackground}`}
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">

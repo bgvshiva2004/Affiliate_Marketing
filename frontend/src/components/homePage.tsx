@@ -54,14 +54,8 @@ export default function HomePage({
 
   const router = useRouter();
 
-  // const token = Cookies.get('access');
-  // console.log("token : ",token)
-  // console.log("initialToken : ",initialToken)
-  // if(!token) throw new Error('No token found');
-
   useEffect(() => {
     if (initialToken) {
-      // console.log("initialToken : ", initialToken);
       Cookies.set("access", initialToken, {
         path: "/",
         secure: process.env.NODE_ENV === "production",
@@ -88,7 +82,6 @@ export default function HomePage({
   }, [initialToken]);
 
   const handleEditItem = (item: ListItem) => {
-    // console.log("edit item : ",item)
     setEditingItem(item);
     setIsModalOpen(true);
   };
@@ -129,8 +122,6 @@ export default function HomePage({
   };
 
   const toggleListVisibility = async () => {
-    // console.log("logged in : ",isLoggedIn)
-
     if (!isLoggedIn) {
       router.push("/profile");
       return;
@@ -153,43 +144,52 @@ export default function HomePage({
         backgroundAttachment: "fixed",
       }}
     >
+      <ToastContainer 
+        position="top-center"
+        autoClose={3000}
+        style={{ 
+          top: '20px',
+          zIndex: 1000000
+        }}
+        toastStyle={{
+          backgroundColor: '#0355bb',
+          color: 'white',
+          borderRadius: '8px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          fontSize: '14px',
+          padding: '12px 20px'
+        }}
+      />
+
       <div
         className={`h-full w-full border-0 border-red-500`}
         style={{ backdropFilter: "blur(5px)" }}
       ></div>
       <div className="relative">
-        <ToastContainer position="bottom-right" autoClose={3000} />
-
-        {/* Main content */}
         <div
           className={`flex flex-col z-[10] min-h-screen ${
             isListVisible ? "blur-sm" : ""
           } transition-all duration-300`}
         >
-          <div className="flex flex-col lg:flex-row flex-grow w-full h-full items-center justify-center ">
-            {/* Right side - Compact Logo Container */}
-            <div className="w-full p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center ">
-              <div className="p-3 sm:p-4 lg:p-6 rounded-lg transition-all fade-in-out shadow-2xl max-w-lg w-full relative z-[100] flex flex-col items-center ">
-                {/* Background Blur Effect */}
+          <div className="flex flex-col lg:flex-row flex-grow w-full h-full items-center justify-center">
+            <div className="w-full p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center">
+              <div className="p-3 sm:p-4 lg:p-6 rounded-lg transition-all fade-in-out shadow-2xl max-w-lg w-full relative z-[100] flex flex-col items-center">
                 <div
                   id="background"
                   className="!z-[-100] !brightness-100 !left-0 !top-0 items-center"
                   style={{ backdropFilter: "blur(20px)" }}
                 ></div>
 
-                {/* "AuraGen" Text (With Custom Shadow Effect) */}
                 <span className="text-transparent text-3xl sm:text-4xl lg:text-5xl font-bold aura-text">
                   AuraGen
                 </span>
 
-                {/* Logo Image (Compact) */}
                 <img
                   src="/images/logo.png"
                   alt="Logo"
                   className="max-w-[60%] max-h-[60%] object-contain"
                 />
 
-                {/* Subtitle Text (Compact & Centered) */}
                 <span className="text-white text-sm sm:text-base lg:text-lg text-center">
                   Discover the utlimate ease in Shopping
                 </span>
@@ -198,7 +198,6 @@ export default function HomePage({
           </div>
         </div>
 
-        {/* Animated diagonal wave background */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <svg
             className="absolute z-0 top-0 left-0 w-[200%] h-[200%] pointer-events-none opacity-100"
@@ -213,19 +212,8 @@ export default function HomePage({
                 x2="100%"
                 y2="100%"
               >
-                
                 <stop offset="0%" stopColor="#87CEEB" />
                 <stop offset="100%" stopColor="#FFFFFF" />
-
-                {/* <stop offset="0%" stopColor="#FFD1DC" />{" "}            
-                <stop offset="12%" stopColor="#FFB6B6" /> 
-                <stop offset="28%" stopColor="#FFB6A3" /> 
-                <stop offset="43%" stopColor="#FFFACD" /> 
-                <stop offset="58%" stopColor="#90EE90" /> 
-                <stop offset="73%" stopColor="#87CEEB" /> 
-                <stop offset="88%" stopColor="#9B7CB9" /> 
-                <stop offset="100%" stopColor="#B19CD9" />{" "} */}
-              
               </linearGradient>
             </defs>
             <g className="wave-group">
@@ -239,7 +227,6 @@ export default function HomePage({
           </svg>
         </div>
 
-        {/* List items */}
         {isListVisible && (
           <ListComponent
             isVisible={isListVisible}
@@ -251,8 +238,7 @@ export default function HomePage({
           />
         )}
 
-        {/* Add and View List/Home buttons */}
-        <div className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 z-50 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+        <div className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 z-[1000] flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-7">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -270,7 +256,10 @@ export default function HomePage({
                   <Plus className="w-6 h-6" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className="bg-[#0355bb] text-white">
+              <TooltipContent 
+                side="top" 
+                className="z-[1001] bg-[#027cc4] text-white px-3 py-1.5 rounded-md shadow-lg border border-[#0355bb]/20"
+              >
                 <p>Add new List</p>
               </TooltipContent>
             </Tooltip>
@@ -290,14 +279,23 @@ export default function HomePage({
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className="bg-[#0355bb] text-white">
+              <TooltipContent 
+                side="top" 
+                className="z-[1001] bg-[#027cc4] text-white px-3 py-1.5 rounded-md shadow-lg border border-[#0355bb]/20"
+              >
                 <p>{isListVisible ? "Return to Home" : "View List"}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
 
-        {/* Modal */}
+        <div 
+          className={`fixed inset-0 bg-black transition-opacity duration-300 ${
+            isModalOpen ? 'opacity-30' : 'opacity-0 pointer-events-none'
+          }`} 
+          style={{ zIndex: 998 }}
+        />
+        
         <ModalComponent
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -305,8 +303,6 @@ export default function HomePage({
           editingItem={editingItem}
           onItemSaved={handleItemSaved}
         />
-
-        {/* ShoppingSpot Component */}
 
         <style jsx>{`
           @keyframes waveAnimation {
@@ -347,23 +343,21 @@ export default function HomePage({
 
         <style jsx>{`
           .aura-text {
-            color: white; /* Pure white text */
+            color: white;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-            font-size: 1.5rem; /* Equivalent to text-lg */
+            font-size: 1.5rem;
             font-weight: bold;
           }
 
           @media (min-width: 640px) {
-            /* sm breakpoint */
             .aura-text {
-              font-size: 2rem; /* text-4xl */
+              font-size: 2rem;
             }
           }
 
           @media (min-width: 1024px) {
-            /* lg breakpoint */
             .aura-text {
-              font-size: 3rem; /* text-5xl */
+              font-size: 3rem;
             }
           }
         `}</style>
