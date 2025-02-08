@@ -2,7 +2,16 @@
 
 import { useState, useEffect } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Menu, X, ShoppingCart, List, User, Search } from 'lucide-react'  // Importing from lucide-react
+import { 
+  Menu, 
+  X, 
+  Search, 
+  Home as HomeIcon, 
+  Package, 
+  List as ListIcon, 
+  User,
+  BookOpen
+} from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -132,56 +141,67 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
   return (
     <>
       <nav
-        className={`fixed w-full  top-0 transition-all duration-300 !z-[100000] ${navBackground}`}
+        className={`fixed w-full top-0 transition-all duration-300 !z-[999999] ${navBackground}`}
       >
-        <div className=" mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4  md:space-x-10">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            {/* Logo */}
             <div className="flex justify-start lg:w-0 lg:flex-1">
               <Link href="/" className="flex items-center space-x-2">
+                <BookOpen className="h-6 w-6 text-[#0355bb]" />
                 <span className="text-xl font-bold text-[#0355bb] hover:text-black">AuraGen</span>
               </Link>
             </div>
-            <div className="-mr-2 -my-2 md:hidden !z-[100000]">
+
+            {/* Mobile Search Bar */}
+            <div className="flex md:hidden flex-1 mx-4">
+              <form onSubmit={handleSearch} className="w-full">
+                <div className="relative">
+                  <Input
+                    type="search"
+                    placeholder="Search"
+                    className="w-full pr-8"
+                    value={searchQuery}
+                    onChange={handleSearchInputChange}
+                  />
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0"
+                  >
+                    <Search className="h-4 w-4 text-[#0355bb]" />
+                  </Button>
+                </div>
+              </form>
+            </div>
+
+            {/* Mobile Menu */}
+            <div className="md:hidden relative z-[999999]">
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon" className="text-[#0355bb] hover:text-black">
                     <Menu className="h-6 w-6" />
-                    <span className="sr-only">Open menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px] !z-[100000]">
+                <SheetContent side="right" className="w-[300px] sm:w-[400px] z-[999999]">
                   <SheetHeader>
                     <SheetTitle className="text-[#0355bb]">Menu</SheetTitle>
                   </SheetHeader>
                   <div className="mt-6 flex flex-col space-y-4">
-                    <form onSubmit={handleSearch} className="flex w-full items-center">
-                      <Input
-                        type="search"
-                        placeholder="Search Products ..."
-                        className="flex-grow"
-                        value={searchQuery}
-                        onChange={handleSearchInputChange}
-                      />
-                      <Button
-                        type="submit"
-                        variant="ghost"
-                        size="icon"
-                        className="ml-2"
-                      >
-                        <Search className="h-4 w-4 text-[#0355bb]" />
-                        <span className="sr-only">Submit search</span>
-                      </Button>
-                    </form>
                     <SheetClose asChild>
-                      <Link href="/" className="text-base font-medium text-[#0355bb] hover:text-black">
-                        Home
+                      <Link href="/" className="flex items-center space-x-2 text-base font-medium text-[#0355bb] hover:text-black">
+                        <HomeIcon className="h-5 w-5" />
+                        <span>Home</span>
                       </Link>
                     </SheetClose>
                     <SheetClose asChild>
-                      <button onClick={() => {
-                        toggleDrawer()
-                      }} className="text-base font-medium text-[#0355bb] hover:text-black">
-                        Products
+                      <button 
+                        onClick={() => toggleDrawer()}
+                        className="flex items-center space-x-2 text-base font-medium text-[#0355bb] hover:text-black"
+                      >
+                        <Package className="h-5 w-5" />
+                        <span>Products</span>
                       </button>
                     </SheetClose>
                     <SheetClose asChild>
@@ -193,28 +213,35 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                             setIsListVisible(true);
                           }
                         }}
-                        className="text-base font-medium text-[#0355bb] hover:text-black"
+                        className="flex items-center space-x-2 text-base font-medium text-[#0355bb] hover:text-black"
                       >
-                        List
+                        <ListIcon className="h-5 w-5" />
+                        <span>List</span>
                       </button>
                     </SheetClose>
                     <SheetClose asChild>
-                      <Link href="/profile" className="text-base font-medium text-[#0355bb] hover:text-black">
-                        Account
+                      <Link href="/profile" className="flex items-center space-x-2 text-base font-medium text-[#0355bb] hover:text-black">
+                        <User className="h-5 w-5" />
+                        <span>Account</span>
                       </Link>
                     </SheetClose>
                   </div>
                 </SheetContent>
               </Sheet>
             </div>
-            <nav className="hidden md:flex space-x-10">
-              <Link href="/" className="text-base font-medium text-[#0355bb] hover:text-black">
-                Home
+
+            {/* Desktop Menu */}
+            <nav className="hidden md:flex items-center space-x-8">
+              <Link href="/" className="flex items-center space-x-2 text-base font-medium text-[#0355bb] hover:text-black">
+                <HomeIcon className="h-5 w-5" />
+                <span>Home</span>
               </Link>
-              <button onClick={() => {
-                toggleDrawer()
-              }} className="text-base font-medium text-[#0355bb] hover:text-black">
-                Products
+              <button 
+                onClick={() => toggleDrawer()}
+                className="flex items-center space-x-2 text-base font-medium text-[#0355bb] hover:text-black"
+              >
+                <Package className="h-5 w-5" />
+                <span>Products</span>
               </button>
               <button
                 onClick={() => {
@@ -224,21 +251,23 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                     setIsListVisible(true);
                   }
                 }}
-                className="text-base font-medium text-[#0355bb] hover:text-black"
+                className="flex items-center space-x-2 text-base font-medium text-[#0355bb] hover:text-black"
               >
-                List
+                <ListIcon className="h-5 w-5" />
+                <span>List</span>
               </button>
             </nav>
-            <div className="hidden md:flex items-center justify-end w-fit h-fit lg:flex-1">
+
+            {/* Desktop Right Section */}
+            <div className="hidden md:flex items-center justify-end space-x-4 lg:flex-1">
               <div className="relative flex items-center">
-                <div className={`absolute right-0 flex items-center transition-all duration-300 ${isSearchOpen
-                  ? 'w-64 opacity-100 -translate-x-10'
-                  : 'w-0 opacity-0'
-                  }`}>
-                  <form onSubmit={handleSearch} className="flex w-full items-center rounded-l-full rounded-r-full bg-[#E9E9E9]">
+                <div className={`absolute right-0 flex items-center transition-all duration-300 ${
+                  isSearchOpen ? 'w-64 opacity-100 -translate-x-10' : 'w-0 opacity-0'
+                }`}>
+                  <form onSubmit={handleSearch} className="flex w-full items-center rounded-l-full rounded-r-full bg-gray-100">
                     <Input
                       type="search"
-                      placeholder="Search Products ..."
+                      placeholder="Search"
                       className={`border-0 focus-visible:ring-0 rounded-l-md ${isSearchOpen ? 'w-full pl-4' : 'w-0'}`}
                       disabled={!isSearchOpen}
                       value={searchQuery}
@@ -251,7 +280,6 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                       className="h-10 rounded-r-full"
                     >
                       <Search className="h-4 w-4 text-[#0355bb]" />
-                      <span className="sr-only">Submit search</span>
                     </Button>
                   </form>
                 </div>
@@ -260,19 +288,17 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                   size="icon"
                   className="text-[#0355bb] hover:text-black relative z-10"
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  aria-label={isSearchOpen ? 'Close search' : 'Open search'}
                 >
                   {isSearchOpen ? (
-                    <X className="h-6 w-6 text-[#0355bb]" />
+                    <X className="h-6 w-6" />
                   ) : (
-                    <Search className="h-6 w-6 text-[#0355bb]" />
+                    <Search className="h-6 w-6" />
                   )}
                 </Button>
               </div>
               <Link href="/profile">
-                <Button variant="ghost" size="icon" className="text-[#0355bb] hover:text-black ml-4">
-                  <User className="h-6 w-6 text-[#0355bb]" />
-                  <span className="sr-only">User profile</span>
+                <Button variant="ghost" size="icon" className="text-[#0355bb] hover:text-black">
+                  <User className="h-6 w-6" />
                 </Button>
               </Link>
             </div>
@@ -280,6 +306,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
         </div>
       </nav>
 
+      {/* Rest of the components remain the same */}
       {isListVisible && (
         <ListComponent
           isVisible={isListVisible}
@@ -290,6 +317,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
           isModalOpen={isModalOpen}
         />
       )}
+      
       {pathname === "/" && (
         <ShoppingSpot
           controls={controls}
