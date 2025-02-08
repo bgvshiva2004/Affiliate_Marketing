@@ -13,3 +13,5 @@ class UserListsAdmin(admin.ModelAdmin):
     list_display = ('user' , 'title' , 'description')
 
 admin.site.register(UserLists , UserListsAdmin)
+
+admin.site.register(UserProfile)

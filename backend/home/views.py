@@ -140,6 +140,16 @@ class UserDetails(APIView):
             'username' : user.username
         })
         
+
+# if the user is not logged in then display all the products 
+    
+# if logged in if old list is already there and a new list is been added then filter out the products from the list elements and then add the products as recommended products for the user, if the user did not add any list then display all products , if recommended products are present then display them at the top else display all the products in any order
+    
+# once i get the list items , use groq api call and make the items list in an array , then search the items from the db , do partial searching and once thats do then add the recommended products list with the products , recommended products list is a many to many field to products , 
+    
+# the above algorithm must run when a new product gets added then again groq api call will make it into an array of products and then it will be partial searched in db and then those will get added
+    
+# update the get products api call and display the check if there are any recommended products present , if present display them at the top and display all other unique products at the bottom, if there are no recommended products then display all the products , if the user is not logged in display all the products
         
 
     
