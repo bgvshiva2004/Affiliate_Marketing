@@ -217,12 +217,12 @@ export const ListComponent = ({
               Do you wish to delete the list{" "}
               {itemToDelete?.title && (
                 <span className="font-medium">
-                  "{htmlToPlainText(itemToDelete.title)}"
+                  {htmlToPlainText(itemToDelete.title)}
                 </span>
               )}?
             </AlertDialogTitle>
             <AlertDialogDescription className="text-sm sm:text-base">
-              This action can't be undone. Your list will be permanently deleted
+              This action cant be undone. Your list will be permanently deleted
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0 mt-4">

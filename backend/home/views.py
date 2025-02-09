@@ -22,6 +22,8 @@ from rest_framework.views import APIView
 # Create your views here.
 from django.db.models import Q
 
+from django.db.models import Q
+
 class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
     # authentication_classes = [JWTAuthentication]
@@ -41,12 +43,16 @@ class ProductLinksAPI(ListAPIView):
         min_price = self.request.query_params.get('min_price', None)
         max_price = self.request.query_params.get('max_price', None)
 
-        # Filter by search query
+        # Filter by search query (split into words and search each word)
         if search_query:
-            queryset = queryset.filter(
-                Q(product_name__icontains=search_query) |
-                Q(product_description__icontains=search_query)
-            )
+            search_words = search_query.split()  # Split query into individual words
+            query_filter = Q()
+            for word in search_words:
+                query_filter |= (
+                    Q(product_name__icontains=word) |
+                    Q(product_description__icontains=word)
+                )
+            queryset = queryset.filter(query_filter)
 
         # Filter by product ID
         if product_id:
@@ -87,6 +93,7 @@ class ProductLinksAPI(ListAPIView):
 
         # If user is not authenticated or no recommendations exist, return all products
         return queryset.distinct()
+
 
 
 class UserListsAPI(ListCreateAPIView , RetrieveUpdateDestroyAPIView):
