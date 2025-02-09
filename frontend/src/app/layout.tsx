@@ -7,9 +7,9 @@ import { cookies } from 'next/headers';
 
 
 interface ListItem {
-  id : number;
-  title : string;
-  description : string;
+  id: number;
+  title: string;
+  description: string;
 }
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,49 +23,125 @@ export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) { 
+}>) {
 
   const cookieStore = await cookies()
   const token = cookieStore.get('access')?.value
-  let initialLists : ListItem[] = []
+  let initialLists: ListItem[] = []
 
   async function fetchUserLists(token: string): Promise<ListItem[]> {
-      try{
-          const response = await fetch('http://127.0.0.1:8000/api/v1/lists/' , {
-              method: 'GET',
-              headers: {
-                  'Authorization': `Bearer ${token}`,
-              },
-              cache: 'no-store',
-          });
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/v1/lists/', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        cache: 'no-store',
+      });
 
-          if (!response.ok) {
-              console.error(`Response status: ${response.status} ${response.statusText}`);
-              throw new Error('Failed to fetch the lists');
-          }
-
-          const data = await response.json();
-          // console.log('Fetched data:', data);
-          return data;
-
-      }catch(error){
-          console.error('Error Fetching the User Lists : ' , error);
-          throw error;
+      if (!response.ok) {
+        console.error(`Response status: ${response.status} ${response.statusText}`);
+        throw new Error('Failed to fetch the lists');
       }
-  }
 
-  if(token){
-    try{
-      initialLists = await fetchUserLists(token)
-    }catch(error){
-      console.error('Error fetching initial lists : ', error)
+      const data = await response.json();
+      // console.log('Fetched data:', data);
+      return data;
+
+    } catch (error) {
+      console.error('Error Fetching the User Lists : ', error);
+      throw error;
     }
   }
 
+  if (token) {
+    try {
+      initialLists = await fetchUserLists(token)
+    } catch (error) {
+      console.error('Error fetching initial lists : ', error)
+    }
+  }
+  const imageDirectURL = `${process.env.SITE_URL}/images/logo.png`;
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+        <meta name="subject" content="OuraGen" />
+        <meta
+          name="description"
+          content="Discover the ultimate ease in the shopping via various platforms through a single interface."
+        />
+        <meta
+          name="keywords"
+          content="Ecommerce, List, Notes, Shopping, buy online, online shopping, best online store, discount deals, free shipping, shop now, buy [product name] online, best [product category] store, affordable [product name], luxury [product category], handmade [product name], best deals on [product name], [product name] near me, buy [product] with discount, fast delivery [product name], cheap [product name] online, black friday sale [product], christmas gifts for [audience], summer fashion trends, cyber monday deals, best [product] reviews, [brand] vs [brand] comparison, top-rated [product], customer reviews for [product], buy [product] in [city], best [product] store near me, online shopping in [location], how to choose the best [product], [product] buying guide, benefits of using [product], trending [product category]
+          "
+        />
+        <meta name="language" content="en" />
+        <meta name="url" content={process.env.SITE_URL} />
+        <meta name="coverage" content="Worldwide" />
+        <meta name="distribution" content="Global" />
+        <meta name="target" content="all" />
+        <meta name="rating" content="General" />
+        <meta name="og:country-name" content="India" />
+        <meta name="og:region" content="India" />
+        <meta property="og:url" content={process.env.SITE_URL} />
+        <meta
+          name="og:site_name"
+          content="OuraGen"
+        />
+        <meta property="og:type" content="Website" />
+        <meta
+          property="og:title"
+          content="OuraGen"
+        />
+        <meta
+          property="og:description"
+          content="Discover the ultimate ease in the shopping via various platforms through a single interface."
+        />
+        <meta name="twitter:card" content="website" />
+        <meta
+          name="twitter:site"
+          content="OuraGen"
+        />
+        <meta
+          name="twitter:title"
+          content="OuraGen"
+        />
+        <meta
+          name="twitter:description"
+          content="Discover the ultimate ease in the shopping via various platforms through a single interface."
+        />
+        <meta itemProp="name" content="OuraGen" />
+        <meta
+          itemProp="description"
+          content="Discover the ultimate ease in the shopping via various platforms through a single interface."
+        />
+        <meta name="author" content="BGV Shiva" />
+
+        <meta property="og:image" content={imageDirectURL} />
+        <meta name="twitter:image" content={imageDirectURL} />
+
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link
+          rel="apple-touch-icon"
+          sizes="150x150"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+      </head>
       <body className={inter.className}>
-        <Navbar token = {token} initialLists = {initialLists} />
+        <Navbar token={token} initialLists={initialLists} />
         {children}
       </body>
     </html>
