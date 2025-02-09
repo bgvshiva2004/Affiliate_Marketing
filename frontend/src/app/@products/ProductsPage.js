@@ -14,9 +14,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Tag, Globe, Monitor, DollarSign, X } from 'lucide-react';
 import { getAllProducts } from "@/api";
-import { platform } from "os";
 import Footer from "@/components/footer";
 
 export default function ProductsPage() {
@@ -30,6 +29,7 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Existing loadProducts function and other handlers remain the same
   const loadProducts = async (filters = {}) => {
     try {
       setLoading(true);
@@ -168,155 +168,222 @@ export default function ProductsPage() {
   };
 
   if (loading) {
-    return <div className="text-center py-8">Loading products...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#0355bb]"></div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center py-8 text-red-500">{error}</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="bg-red-50 p-4 rounded-lg">
+          <p className="text-red-600 font-medium">{error}</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col h-scree"
-	style={{
-        background: 'radial-gradient(circle, #027cc4, #FFFFFF)',
+    <div
+      className="flex flex-col min-h-screen"
+      style={{
+        background: "radial-gradient(circle at center, #027cc4 0%, #ffffff 100%)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed",
       }}
-	>
+    >
       <div className="flex-1 overflow-hidden">
-        <div id="ProductsPage" className="h-full flex flex-col px-4 py-4">
-          <div className="flex flex-col mb-4">
-            <div className="flex items-center space-x-2">
-              <Input
-                type="text"
-                placeholder="Search products"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 bg-white border-[#0355bb] focus:ring-[#027cc4] focus:border-[#027cc4]"
-              />
+        <div id="ProductsPage" className="h-full flex flex-col px-4 py-6">
+          <div className="flex flex-col mb-6">
+            <div className="flex items-center space-x-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-4 h-11 bg-white border-[#0355bb] focus:ring-[#027cc4] focus:border-[#027cc4] rounded-lg shadow-sm transition-all duration-200 hover:shadow-md"
+                />
+              </div>
               <Sheet>
-                <SheetTrigger asChild>
-                  <Button 
-                    variant="outline"
-                    className="bg-[#0355bb] text-white hover:bg-[#027cc4] border-[#0355bb]"
-                    >
-                    <SlidersHorizontal className="mr-2 h-4 w-4" />
-                    Filters
-                  </Button>
-                </SheetTrigger>
-                <SheetContent className="z-[10000000] bg-white border-l-[#0355bb]">
-                  <SheetHeader>
-                    <SheetTitle className="text-[#0355bb]">Filters</SheetTitle>
-                  </SheetHeader>
-                  <div className="mt-4 space-y-4">
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="h-11 bg-[#0355bb] text-white hover:bg-[#027cc4] border-[#0355bb] rounded-lg shadow-sm transition-all duration-200 hover:shadow-md"
+                >
+                  <SlidersHorizontal className="mr-2 h-5 w-5" />
+                  Filters
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-full sm:w-96 p-0 z-[100000]">
+                <SheetHeader className="p-4 border-b">
+                  <SheetTitle className="text-lg font-semibold text-[#0355bb]">Filters</SheetTitle>
+                </SheetHeader>
+                
+                <ScrollArea className="h-[calc(100vh-150px)]">
+                  <div className="p-4 space-y-6">
+                    {/* Categories */}
                     <div className="space-y-2">
-                      <Label className="text-[#0355bb] font-semibold">Categories</Label>
-                      {categories.map((category) => (
-                        <div
-                          key={category.name}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox
-                            id={`category-${category.name}`}
-                            checked={selectedCategories.includes(category.name)}
-                            onCheckedChange={() =>
-                              handleCategoryChange(category.name)
-                            }
-                            className="border-[#0355bb] text-[#027cc4] focus:ring-[#027cc4]"
-                          />
-                          <Label 
-                            htmlFor={`category-${category.name}`} 
-                            className="text-[#0355bb]"
+                      <div className="flex items-center gap-2 text-[#0355bb]">
+                        <Tag className="h-4 w-4" />
+                        <h3 className="font-semibold">Categories</h3>
+                      </div>
+                      <div className="space-y-1.5">
+                        {categories.map((category) => (
+                          <div
+                            key={category.name}
+                            className="flex items-center"
+                          >
+                            <Checkbox 
+                              id={`category-${category.name}`} 
+                              checked={selectedCategories.includes(category.name)}
+                              onCheckedChange={() => handleCategoryChange(category.name)}
+                              className="border-[#0355bb] text-[#0355bb]"
+                            />
+                            <Label 
+                              htmlFor={`category-${category.name}`} 
+                              className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
                             >
-                            {category.name}
-                          </Label>
-                        </div>
-                      ))}
+                              {category.name}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
                     </div>
+
+                    {/* Platforms */}
                     <div className="space-y-2">
-                      <Label className="text-[#0355bb] font-semibold">Countries</Label>
-                      {uniqueCountries.map((country) => (
-                        <div
-                          key={country}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox
-                            id={`country-${country}`}
-                            checked={selectedCountries.includes(country)}
-                            onCheckedChange={() => handleCountryChange(country)}
-                            className="border-[#0355bb] text-[#027cc4] focus:ring-[#027cc4]"
-                          />
-                          <Label htmlFor={`country-${country}`} className="text-[#0355bb]">
-                            {country}
-                          </Label>
-                        </div>
-                      ))}
+                      <div className="flex items-center gap-2 text-[#0355bb]">
+                        <Monitor className="h-4 w-4" />
+                        <h3 className="font-semibold">Platforms</h3>
+                      </div>
+                      <div className="space-y-1.5">
+                        {uniquePlatforms.map((platform) => (
+                          <div
+                            key={platform}
+                            className="flex items-center"
+                          >
+                            <Checkbox
+                              id={`platform-${platform}`} 
+                              checked={selectedPlatforms.includes(platform)}
+                              onCheckedChange={() => handlePlatformChange(platform)}
+                              className="border-[#0355bb] text-[#0355bb]"
+                            />
+                            <Label 
+                              htmlFor={`platform-${platform}`} 
+                              className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
+                            >
+                              {platform}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
                     </div>
+
+                    {/* Countries */}
                     <div className="space-y-2">
-                      <Label className="text-[#0355bb] font-semibold">Platforms</Label>
-                      {uniquePlatforms.map((platform) => (
-                        <div
-                          key={platform}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox
-                            id={`platform-${platform}`}
-                            checked={selectedPlatforms.includes(platform)}
-                            onCheckedChange={() =>
-                              handlePlatformChange(platform)
-                            }
-                            className="border-[#0355bb] text-[#027cc4] focus:ring-[#027cc4]"
-                          />
-                          <Label htmlFor={`platform-${platform}`} className="text-[#0355bb]">
-                            {platform}
+                      <div className="flex items-center gap-2 text-[#0355bb]">
+                        <Globe className="h-4 w-4" />
+                        <h3 className="font-semibold">Countries</h3>
+                      </div>
+                      <div className="space-y-1.5">
+                        {uniqueCountries.map((country) => (
+                          <div
+                            key={country}
+                            className="flex items-center"
+                          >
+                            <Checkbox
+                              id={`country-${country}`} 
+                              checked={selectedCountries.includes(country)}
+                              onCheckedChange={() => handleCountryChange(country)}
+                              className="border-[#0355bb] text-[#0355bb]"
+                            />
+                            <Label 
+                              htmlFor={`country-${country}`} 
+                              className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
+                            >
+                              {country}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Price Range */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-[#0355bb]">
+                        <DollarSign className="h-4 w-4" />
+                        <h3 className="font-semibold">Price Range</h3>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Label 
+                            htmlFor="minPrice" 
+                            className="text-xs text-[#0355bb]/70"
+                          >
+                            Min Price
                           </Label>
+                          <Input
+                            id="minPrice"
+                            type="number"
+                            placeholder=""
+                            value={minPrice}
+                            onChange={(e) => setMinPrice(e.target.value)}
+                            className="h-9 border-[#0355bb]/20 focus:border-[#0355bb] focus:ring-[#0355bb]"
+                          />
                         </div>
-                      ))}
-                    </div>
-                    <div>
-                      <Label htmlFor="minPrice" className="text-[#0355bb] font-semibold">Min Price</Label>
-                      <Input
-                        id="minPrice"
-                        type="number"
-                        placeholder="Min Price"
-                        value={minPrice}
-                        onChange={(e) => setMinPrice(e.target.value)}
-                        className="border-[#0355bb] focus:ring-[#027cc4] focus:border-[#027cc4]"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="maxPrice" className="text-[#0355bb] font-semibold">Max Price</Label>
-                      <Input
-                        id="maxPrice"
-                        type="number"
-                        placeholder="Max Price"
-                        value={maxPrice}
-                        onChange={(e) => setMaxPrice(e.target.value)}
-                        className="border-[#0355bb] focus:ring-[#027cc4] focus:border-[#027cc4]"
-                      />
-                    </div>
-                    <div className="space-y-2">	
-                      <Button onClick={applyFilters} className="w-full bg-[#0355bb] text-white hover:bg-[#027cc4]">
-                        Apply Filters
-                      </Button>
-                      <Button
-                        onClick={clearFilters}
-                        variant="outline"
-                        className="w-full border-[#0355bb] text-[#0355bb] hover:bg-[#027cc4] hover:text-white"
-                      >
-                        Clear Filters
-                      </Button>
+                        <div>
+                          <Label 
+                            htmlFor="maxPrice" 
+                            className="text-xs text-[#0355bb]/70"
+                          >
+                            Max Price
+                          </Label>
+                          <Input
+                            id="maxPrice"
+                            type="number"
+                            placeholder=""
+                            value={maxPrice}
+                            onChange={(e) => setMaxPrice(e.target.value)}
+                            className="h-9 border-[#0355bb]/20 focus:border-[#0355bb] focus:ring-[#0355bb]"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </SheetContent>
-              </Sheet>
+                </ScrollArea>
+
+                  {/* Filter Actions */}
+                <div className="p-4 bg-white">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={clearFilters}
+                      className="border-[#0355bb] text-[#0355bb] hover:bg-[#0355bb]/10"
+                    >
+                      Clear All
+                    </Button>
+                    <Button
+                      onClick={applyFilters}
+                      className="bg-[#0355bb] hover:bg-[#027cc4] text-white"
+                    >
+                      Apply Filters
+                    </Button>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
             </div>
           </div>
+
           <div className="flex-1 min-h-0">
-            <div className="h-full rounded-lg border bg-white shadow-lg p-2 transform transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl ml-2 mr-2">
+            <div className="h-full rounded-xl border bg-white shadow-lg p-4 transform transition-all duration-300 hover:shadow-xl mx-2">
               <ScrollArea className="h-full">
-                <div className="p-2">
+                <div className="space-y-6">
                   {filteredCategories.map((category, index) => (
                     <CategorySection
                       id={index}
@@ -327,9 +394,18 @@ export default function ProductsPage() {
                     />
                   ))}
                   {filteredCategories.length === 0 && (
-                    <p className="text-center text-gray-500">
-                      No products found matching your criteria.
-                    </p>
+                    <div className="flex flex-col items-center justify-center py-12">
+                      <p className="text-gray-500 text-lg">
+                        No products found matching your criteria.
+                      </p>
+                      <Button
+                        onClick={clearFilters}
+                        variant="link"
+                        className="mt-2 text-[#0355bb] hover:text-[#027cc4]"
+                      >
+                        Clear all filters
+                      </Button>
+                    </div>
                   )}
                 </div>
               </ScrollArea>
