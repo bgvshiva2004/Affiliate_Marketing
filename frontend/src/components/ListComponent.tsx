@@ -14,6 +14,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { jwtDecode } from "jwt-decode";
+
+interface TokenPayload {
+  username?: string;
+}
 
 interface ListItem {
   id: number;
@@ -58,6 +63,17 @@ const htmlToPlainText = (html: string) => {
   return text;
 };
 
+const getUsernameFromToken = (token: string | null | undefined): string => {
+  if (!token) return "Your";
+  try {
+    const decoded: TokenPayload = jwtDecode(token);
+    return decoded.username || "Your";
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return "Your";
+  }
+};
+
 export const ListComponent = ({
   isVisible,
   token,
@@ -71,6 +87,8 @@ export const ListComponent = ({
   const [selectedItem, setSelectedItem] = useState<ListItem | null>(null);
   const [isLocalModalOpen, setIsLocalModalOpen] = useState(false);
   const isBackgroundBlurred = isLocalModalOpen || isModalOpen || !!selectedItem;
+
+  const username = getUsernameFromToken(token); 
 
   const handleRemoveItem = async (id: number) => {
     try {
@@ -111,7 +129,7 @@ export const ListComponent = ({
     <div className="relative">
       <div className={`fixed top-0 left-0 w-full h-full !z-[100000] overflow-auto bg-white/80 backdrop-blur-sm p-2 sm:p-6 transition-opacity duration-300 ease-in-out ${isBackgroundBlurred ? 'blur-sm brightness-75' : ''}`}>
         <div className="flex justify-between items-center mb-2 sm:mb-4 px-2">
-          <h2 className="text-lg sm:text-2xl font-bold text-[#0355bb]">Your Lists</h2>
+          <h2 className="text-lg sm:text-2xl font-bold text-[#0355bb]">{username}'s lists</h2>
           <Button
             variant="ghost"
             size="icon"

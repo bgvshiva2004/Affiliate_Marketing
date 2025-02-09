@@ -8,16 +8,16 @@ interface Props {
 
 export const Container = styled.div`
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
   width: 678px;
   max-width: 100%;
-  min-height: 400px;
+  min-height: 320px;
 
   @media (max-width: 768px) {
-    min-height: 800px;
+    min-height: 650px;
   }
 `;
 
@@ -68,53 +68,112 @@ export const Form = styled.form`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0 50px;
+  padding: 0 35px;
   height: 100%;
   text-align: center;
 `;
 
 export const Title = styled.h1`
-  font-weight: bold;
+  font-weight: 600;
   margin: 0;
+  color: #0355bb;
+  font-size: 22px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+export const InputContainer = styled.div`
+  position: relative;
+  width: 100%;
+  margin: 5px 0;
+`;
+
+export const InputIcon = styled.div`
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #027cc4;
+  display: flex;
+  align-items: center;
 `;
 
 export const Input = styled.input`
-  background-color: #eee;
-  border: none;
-  padding: 12px 15px;
-  margin: 8px 0;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 8px 12px 8px 38px;
   width: 100%;
+  transition: all 0.3s ease;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #027cc4;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(2, 124, 196, 0.1);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
 `;
 
 export const Button = styled.button`
-  border-radius: 20px;
-  border: 1px solid rgb(0,0,0);
-  background-color: rgb(0,0,0);
+  border-radius: 12px;
+  border: 1px solid #027cc4;
+  background-color: #027cc4;
   color: #ffffff;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 12px 45px;
-  letter-spacing: 1px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 35px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  transition: transform 80ms ease-in;
-  &:active{
-    transform: scale(0.95);
+  transition: all 0.3s ease;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background-color: #0355bb;
+    border-color: #0355bb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(2, 124, 196, 0.15);
   }
-  &:focus {
-    outline: none;
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
 export const GhostButton = styled(Button)`
   background-color: transparent;
   border-color: #ffffff;
+  padding: 8px 30px;
+  
+  &:hover {
+    background-color: #ffffff;
+    color: #027cc4;
+    box-shadow: none;
+  }
 `;
 
 export const Anchor = styled.a`
-  color: #333;
-  font-size: 14px;
+  color: #0355bb;
+  font-size: 13px;
   text-decoration: none;
-  margin: 15px 0;
+  margin: 10px 0;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &:hover {
+    color: #027cc4;
+  }
 `;
 
 export const OverlayContainer = styled.div<Props>`
@@ -138,9 +197,7 @@ export const OverlayContainer = styled.div<Props>`
 `;
 
 export const Overlay = styled.div<Props>`
-  background: #ff416c;
-  background: -webkit-linear-gradient(to right, #ff4b2b, #ff416c);
-  background: rgb(0,0,0);
+  background: linear-gradient(135deg, #027cc4 0%, #0355bb 100%);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0 0;
@@ -169,7 +226,7 @@ export const OverlayPanel = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0 40px;
+  padding: 0 25px;
   text-align: center;
   top: 0;
   height: 100%;
@@ -181,6 +238,7 @@ export const OverlayPanel = styled.div`
     height: 50%;
     width: 100%;
     transform: translateY(0);
+    padding: 0 16px;
   }
 `;
 
@@ -208,9 +266,15 @@ export const RightOverlayPanel = styled(OverlayPanel)<Props>`
 `;
 
 export const Paragraph = styled.p`
-  font-size: 14px;
-  font-weight: 100;
-  line-height: 20px;
-  letter-spacing: 0.5px;
-  margin: 20px 0 30px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+  margin: 12px 0 20px;
+  opacity: 0.9;
+
+  @media (max-width: 768px) {
+    margin: 8px 0 16px;
+    font-size: 12px;
+  }
 `;

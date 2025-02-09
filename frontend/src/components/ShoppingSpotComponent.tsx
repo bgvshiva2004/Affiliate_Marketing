@@ -24,7 +24,7 @@ export const ShoppingSpot = ({ isOpen, setIsOpen, controls, handleDragEnd, toggl
         <motion.div
             className={`fixed bottom-0 left-0 right-0 shadow-lg z-[10000] ${className}`}
             initial={{ height: '0px' }}
-            animate={{ height: isOpen ? '85vh' : '0px' }}
+            animate={{ height: isOpen ? '83vh' : '0px' }}
             // animate={controls}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         >
