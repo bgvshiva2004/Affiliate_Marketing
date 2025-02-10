@@ -151,7 +151,7 @@ export default function Profile() {
           <h2 className="text-2xl font-semibold text-[#0355bb] mb-2">
             Welcome, {user?.username || "User"}!
           </h2>
-          <p className="text-slate-600 mb-6">We're glad to have you here</p>
+          <p className="text-slate-600 mb-6">We are glad to have you here</p>
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => router.push('/')}
