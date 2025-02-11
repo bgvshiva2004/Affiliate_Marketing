@@ -11,24 +11,44 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from datetime import timedelta
 import os
-
+import environ
+from django.core.exceptions import ImproperlyConfigured
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x*%2#1e5f0nv1ukrhgt-32e^$+5gdtp++u$*@oksg$#q$kyow1'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['affiliatemarketing-production.up.railway.app','localhost','127.0.0.1','railway.app']
 
+SECRET_KEY = env("SECRET_KEY")
+
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env.bool('DEBUG', default=True)
+
+if not DEBUG:
+    ALLOWED_HOSTS = ['localhost','127.0.0.1']
+    HOST_URL = env('HOST_URL')
+    if HOST_URL:
+        ALLOWED_HOSTS.append(HOST_URL)
+        CSRF_TRUSTED_ORIGINS = [f"https://{HOST_URL}","http://127.0.0.1:8000","http://localhost:8000"]
+    else:
+        raise ImproperlyConfigured("HOST_URL environment variable is not set")
+else:
+    ALLOWED_HOSTS = ['localhost','127.0.0.1','affiliatemarketing-production.up.railway.app']
+    CSRF_TRUSTED_ORIGINS = ["https://affiliatemarketing-production.up.railway.app","http://127.0.0.1:8000","http://localhost:8000"]
 
 # Application definition
 
@@ -48,8 +68,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
-
     'corsheaders.middleware.CorsMiddleware',
     
     'django.middleware.common.CommonMiddleware',
@@ -135,19 +155,37 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+
+STATIC_URL = '/backend/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static") 
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'staticfiles')
+]
+
+MEDIA_URL = "/backend/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }
 
 
@@ -190,7 +228,3 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
-
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
