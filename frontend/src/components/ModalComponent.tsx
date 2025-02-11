@@ -68,8 +68,8 @@ export const ModalComponent = ({
   const saveListItem = async (item: NewListItem): Promise<ListItem> => {
     try {
       const url = editingItem
-        ? `http://127.0.0.1:8000/api/v1/lists/${editingItem.id}/`
-        : "http://127.0.0.1:8000/api/v1/lists/";
+        ? `https://affiliatemarketing-production.up.railway.app/backend/api/v1/lists/${editingItem.id}/`
+        : "https://affiliatemarketing-production.up.railway.app/backend/api/v1/lists/";
 
       const method = editingItem ? "PUT" : "POST";
 

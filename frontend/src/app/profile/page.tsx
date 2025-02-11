@@ -79,7 +79,7 @@ export default function Profile() {
   const handleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/v1/signup", {
+      const response = await fetch("https://affiliatemarketing-production.up.railway.app/backend/api/v1/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export default function Profile() {
   const handleSignInSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/v1/token/", {
+      const response = await fetch("https://affiliatemarketing-production.up.railway.app/backend/api/v1/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

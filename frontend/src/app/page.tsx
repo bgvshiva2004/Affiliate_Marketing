@@ -10,7 +10,7 @@ interface ListItem {
 
 async function fetchUserLists(token: string): Promise<ListItem[]> {
     try{
-        const response = await fetch('http://127.0.0.1:8000/api/v1/lists/' , {
+        const response = await fetch('https://affiliatemarketing-production.up.railway.app/backend/api/v1/lists/' , {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
