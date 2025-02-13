@@ -79,7 +79,7 @@ export default function Profile() {
   const handleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/v1/signup", {
+      const response = await fetch("https://affiliatemarketing-production.up.railway.app/backend/api/v1/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export default function Profile() {
   const handleSignInSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/v1/token/", {
+      const response = await fetch("https://affiliatemarketing-production.up.railway.app/backend/api/v1/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,7 +151,7 @@ export default function Profile() {
           <h2 className="text-2xl font-semibold text-[#0355bb] mb-2">
             Welcome, {user?.username || "User"}!
           </h2>
-          <p className="text-slate-600 mb-6">We're glad to have you here</p>
+          <p className="text-slate-600 mb-6">We are glad to have you here</p>
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => router.push('/')}

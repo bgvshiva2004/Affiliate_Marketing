@@ -30,3 +30,5 @@ admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(ProductLinks, ProductLinksAdmin)
 admin.site.register(UserLists, UserListsAdmin)
+
+admin.site.register(UserProfile)

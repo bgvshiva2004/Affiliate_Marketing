@@ -68,8 +68,8 @@ export const ModalComponent = ({
   const saveListItem = async (item: NewListItem): Promise<ListItem> => {
     try {
       const url = editingItem
-        ? `http://127.0.0.1:8000/api/v1/lists/${editingItem.id}/`
-        : "http://127.0.0.1:8000/api/v1/lists/";
+        ? `https://affiliatemarketing-production.up.railway.app/backend/api/v1/lists/${editingItem.id}/`
+        : "https://affiliatemarketing-production.up.railway.app/backend/api/v1/lists/";
 
       const method = editingItem ? "PUT" : "POST";
 
@@ -150,34 +150,46 @@ export const ModalComponent = ({
           <div className="px-1">
             <label className="text-sm font-medium text-gray-700 mb-2 block flex items-center gap-2">
               Title
-              {/* <span className="text-xs text-gray-400 font-normal">(Required)</span> */}
             </label>
-            <ContentEditable
-              html={newItem.title}
-              onChange={(e) => handleNewItemChange("title", e.target.value)}
-              tagName="div"
-              className="text-base sm:text-lg outline-none border border-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-[#0355bb]/20 focus:border-[#0355bb] transition-all duration-200 min-h-[40px] empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300"
-              data-placeholder="Give the title..."
-            />
+            <ScrollArea className="h-[50px] border border-gray-200 rounded-lg focus-within:ring-2 focus-within:ring-[#0355bb]/20 focus-within:border-[#0355bb] transition-all duration-200">
+              <div className="relative w-full">
+                <ContentEditable
+                  html={newItem.title}
+                  onChange={(e) => handleNewItemChange("title", e.target.value)}
+                  tagName="div"
+                  className="text-base sm:text-lg outline-none p-3 min-h-[40px] empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300 whitespace-pre-wrap overflow-wrap-break-word"
+                  data-placeholder="Give the title..."
+                  style={{
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                    width: '100%'
+                  }}
+                />
+              </div>
+            </ScrollArea>
           </div>
           
           <div className="px-1">
             <label className="text-sm font-medium text-gray-700 mb-2 block flex items-center gap-2">
               Description
-              {/* <span className="text-xs text-gray-400 font-normal">(Optional)</span> */}
             </label>
             <ScrollArea className="h-[200px] sm:h-[250px] border border-gray-200 rounded-lg focus-within:ring-2 focus-within:ring-[#0355bb]/20 focus-within:border-[#0355bb] transition-all duration-200">
-              <ContentEditable
-                html={newItem.description}
-                onChange={(e) => handleNewItemChange("description", e.target.value)}
-                tagName="div"
-                className="text-sm sm:text-base text-gray-800 outline-none p-4 min-h-full empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300 whitespace-pre-wrap break-words [text-rendering:optimizeLegibility] antialiased"
-                data-placeholder="Give the Description..."
-                style={{
-                  WebkitFontSmoothing: 'antialiased',
-                  MozOsxFontSmoothing: 'grayscale'
-                }}
-              />
+              <div className="relative w-full">
+                <ContentEditable
+                  html={newItem.description}
+                  onChange={(e) => handleNewItemChange("description", e.target.value)}
+                  tagName="div"
+                  className="text-sm sm:text-base text-gray-800 outline-none p-4 min-h-full empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300 whitespace-pre-wrap overflow-wrap-break-word [text-rendering:optimizeLegibility] antialiased"
+                  data-placeholder="Give the Description..."
+                  style={{
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                    width: '100%'
+                  }}
+                />
+              </div>
             </ScrollArea>
           </div>
         </div>

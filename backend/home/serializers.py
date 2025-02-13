@@ -13,7 +13,7 @@ class ProductLinksSerializers(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = User 
-        fields = ['id','username','password','hobbies','age']
+        fields = ['id','username','password']
 
 class UserListsSerializer(serializers.ModelSerializer):
     ...
