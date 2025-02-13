@@ -15,25 +15,21 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import CustomTokenRefreshSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
-
+from .agent import get_products_from_list
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework_simplejwt.tokens import RefreshToken
 
-
-# Create your views here.
-from django.db.models import Q
 
 from django.db.models import Q
 
 class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         print(self.request.user)
-
-        # Get all products
         queryset = ProductLinks.objects.all()
 
         # Get search parameters
@@ -43,15 +39,33 @@ class ProductLinksAPI(ListAPIView):
         min_price = self.request.query_params.get('min_price', None)
         max_price = self.request.query_params.get('max_price', None)
 
-        # Filter by search query (split into words and search each word)
+        # Use GroqAgent to expand search terms if search_query exists
         if search_query:
-            search_words = search_query.split()  # Split query into individual words
+            # Get expanded search terms from GroqAgent
+            expanded_terms = get_products_from_list(
+                title=search_query,
+                description=search_query,
+                hobbies=None,
+                age=None
+            )
+            
+            # Create a combined Q object for all search terms
             query_filter = Q()
-            for word in search_words:
+            
+            # Add original search terms
+            for word in search_query.split():
                 query_filter |= (
                     Q(product_name__icontains=word) |
                     Q(product_description__icontains=word)
                 )
+            
+            # Add expanded search terms
+            for term in expanded_terms:
+                query_filter |= (
+                    Q(product_name__icontains=term) |
+                    Q(product_description__icontains=term)
+                )
+            
             queryset = queryset.filter(query_filter)
 
         # Filter by product ID
@@ -71,18 +85,15 @@ class ProductLinksAPI(ListAPIView):
                 price_filters &= Q(product_price__lte=max_price)
             queryset = queryset.filter(price_filters)
 
-        # Get recommended products for the user and prioritize them
+        # Handle recommended products for authenticated users
         if self.request.user.is_authenticated:
             try:
-                # Fetch user's profile and recommended products
                 user_profile = UserProfile.objects.get(user=self.request.user)
                 recommended_products = user_profile.recommended_products.all()
-
-                # Combine recommended products with remaining products
                 recommended_ids = recommended_products.values_list('id', flat=True)
                 non_recommended_products = queryset.exclude(id__in=recommended_ids)
-
-                # Concatenate recommended products at the top, followed by others
+                
+                # Combine recommended and non-recommended products
                 final_queryset = (
                     recommended_products.distinct() | non_recommended_products.distinct()
                 )
@@ -91,7 +102,6 @@ class ProductLinksAPI(ListAPIView):
             except UserProfile.DoesNotExist:
                 print("User profile not found, returning all products.")
 
-        # If user is not authenticated or no recommendations exist, return all products
         return queryset.distinct()
 
 
@@ -123,44 +133,56 @@ class UserListsAPI(ListCreateAPIView , RetrieveUpdateDestroyAPIView):
         return self.destroy(request, *args, **kwargs)
 
 
-@api_view(['POST'])
-def signup(request):
-    serializer = UserSerializer(data=request.data)
+class SignupView(APIView):
+    permission_classes = [AllowAny]
     
-    if serializer.is_valid():
-        user = serializer.save()
-        user.set_password(request.data['password'])  
-        user.save()
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            user = serializer.save()
+            user.set_password(request.data['password'])
+            user.save()
 
-        token = Token.objects.create(user=user)
+            # Update UserProfile
+            user.userprofile.hobbies = request.data.get('hobbies', None)
+            user.userprofile.age = request.data.get('age', None)
+            user.userprofile.save()
 
-        hobbies = request.data.get('hobbies', None)
-        age = request.data.get('age', None)
+            refresh = RefreshToken.for_user(user)
 
-        UserLists.objects.create(
-            user=user,
-            hobbies=hobbies,
-            age=age,
-        )
+            return Response({
+                "access_token": str(refresh.access_token),
+                "refresh_token": str(refresh),
+                "user": serializer.data,
+                "profile": {
+                    "hobbies": request.data.get('hobbies'),
+                    "age": request.data.get('age')
+                }
+            }, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({"token": token.key, "user": serializer.data})
+
+
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
     
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-@api_view(['POST'])
-def login(request):
-
-    user = get_object_or_404(User , username = request.data['username'])
-
-    if not user.check_password(request.data['password']):
-        return Response({"detail" : "Not_Found"} , status = status.HTTP_404_NOT_FOUND)
-    
-    token , created = Token.objects.get_or_create(user = user)
-    serializer = UserSerializer(instance = user)
-
-    return Response({"token" : token.key , "user" : serializer.data})
+    def post(self, request):
+        user = get_object_or_404(User, username=request.data['username'])
+        
+        if not user.check_password(request.data['password']):
+            return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        refresh = RefreshToken.for_user(user)
+        serializer = UserSerializer(instance=user)
+        
+        return Response({
+            "access_token": str(refresh.access_token),
+            "refresh_token": str(refresh),
+            "user": serializer.data
+        })
 
 
 
