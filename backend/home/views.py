@@ -129,21 +129,24 @@ def signup(request):
     
     if serializer.is_valid():
         user = serializer.save()
-        user.set_password(request.data['password'])  
+        user.set_password(request.data['password'])
         user.save()
+
+        # Update UserProfile
+        user.userprofile.hobbies = request.data.get('hobbies', None)
+        user.userprofile.age = request.data.get('age', None)
+        user.userprofile.save()
 
         token = Token.objects.create(user=user)
 
-        hobbies = request.data.get('hobbies', None)
-        age = request.data.get('age', None)
-
-        UserLists.objects.create(
-            user=user,
-            hobbies=hobbies,
-            age=age,
-        )
-
-        return Response({"token": token.key, "user": serializer.data})
+        return Response({
+            "token": token.key,
+            "user": serializer.data,
+            "profile": {
+                "hobbies": request.data.get('hobbies'),
+                "age": request.data.get('age')
+            }
+        })
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
