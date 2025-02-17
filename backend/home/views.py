@@ -25,8 +25,6 @@ from django.db.models import Q
 
 class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         print(self.request.user)
