@@ -7,10 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 const List = () => {
   return (
-    <>
+    <div className={`${poppins.className}`}>
       <section className="flex flex-row bg-[#0BC772] w-4/5 h-[80%] backdrop-filter backdrop-blur-md border-white border-opacity-20 rounded-lg p-5 shadow-lg shadow-black/20">
         <ScrollArea className="w-full bg-[#0BC772] border-solid border-white border-2 p-3 flex flex-col justify-between items-center">
           <div className="flex flex-row justify-between items-center m-3">
@@ -119,7 +125,7 @@ const List = () => {
           </div>
         </ScrollArea>
       </section>
-    </>
+    </div>
   );
 };
 

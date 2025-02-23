@@ -28,6 +28,7 @@ import Cookies from 'js-cookie'
 import { ListComponent } from "./ListComponent"
 import { ModalComponent } from "./ModalComponent"
 import { ShoppingSpot } from "./ShoppingSpotComponent"
+import { Poppins } from "next/font/google"
 
 interface ListItem {
   id: number;
@@ -39,6 +40,11 @@ interface NavbarProps {
   token?: string | null;
   initialLists: ListItem[];
 }
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 export default function Navbar({ token, initialLists }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
@@ -112,6 +118,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
       controls.start({ height: '0px' })
     }
   }
+  
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen)
@@ -136,7 +143,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
   }, [isOpen, controls]);
 
   return (
-    <>
+    <div className={`${poppins.className}`}>
       <nav
         className={`fixed w-full top-0 transition-all duration-500 ease-in-out !z-[100000] ${navBackground} ${
           scrolled ? 'border-b border-gray-200/20' : ''
@@ -149,7 +156,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
               <Link href="/" className="flex items-center space-x-2 transition-colors duration-300">
                 <BookOpen className="h-6 w-6 text-[#0355bb]" />
                 <span className="text-xl font-bold text-[#0355bb] hover:text-black transition-colors duration-300">
-                  AuraGen
+                  OuraGen
                 </span>
               </Link>
             </div>
@@ -190,7 +197,7 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
                     <Menu className="h-6 w-6" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px] z-[999999] bg-white/95 backdrop-blur-lg">
+                <SheetContent side="right" className="w-[300px] sm:w-[400px] z-[10000000] bg-white/95 backdrop-blur-lg">
                   <SheetHeader>
                     <SheetTitle className="text-[#0355bb]">Menu</SheetTitle>
                   </SheetHeader>
@@ -351,6 +358,6 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
         editingItem={editingItem}
         onItemSaved={handleItemSaved}
       />
-    </>
+    </div>
   )
 }

@@ -3,6 +3,12 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
+import { Poppins } from 'next/font/google';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 export default function ProductCard({ product }) {
   const handleClick = (url) => {
@@ -12,7 +18,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <Card className="group w-48 bg-white transition-all duration-300 hover:shadow-lg border border-[#0355bb]/10 overflow-hidden">
+    <Card className={`group w-48 bg-white transition-all duration-300 hover:shadow-lg border border-[#0355bb]/10 overflow-hidden ${poppins.className}`}>
       <div className="relative">
         <div
           className="aspect-square overflow-hidden cursor-pointer"

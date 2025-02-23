@@ -2,6 +2,12 @@
 
 import { useRef, useEffect } from "react"
 import ProductCard from './ProductCard'
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+	subsets: ['latin'],
+	weight:"400",
+  })
 
 export function CategorySection({ id, name, products }) {
 
@@ -81,7 +87,7 @@ export function CategorySection({ id, name, products }) {
 	}, [id]);
 
 	return (
-		<div className="w-full">
+		<div className={`w-full ${poppins.className}`}>
 		  <h1 className="text-xl font-bold text-[#0355bb]">{name}</h1>
 		  <div className="grid-container w-full mb-3">
 			<main className="grid-item main w-full">

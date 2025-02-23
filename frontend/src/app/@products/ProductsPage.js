@@ -17,6 +17,12 @@ import {
 import { Search, SlidersHorizontal, Tag, Globe, Monitor, DollarSign, X } from 'lucide-react';
 import { getAllProducts } from "@/api";
 import Footer from "@/components/footer";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -187,7 +193,7 @@ export default function ProductsPage() {
 
   return (
     <div
-      className="flex flex-col min-h-screen"
+      className={`flex flex-col min-h-screen ${poppins.className}`}
       style={{
         background: "radial-gradient(circle at center, #027cc4 0%, #ffffff 100%)",
         backgroundSize: "cover",
@@ -197,7 +203,7 @@ export default function ProductsPage() {
     >
       <div className="flex-1 overflow-hidden">
         <div id="ProductsPage" className="h-full flex flex-col px-4 py-6">
-          <div className="flex flex-col mb-6">
+          {/* <div className="flex flex-col mb-6">
             <div className="flex items-center space-x-3">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -208,18 +214,36 @@ export default function ProductsPage() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 pr-4 h-11 bg-white border-[#0355bb] focus:ring-[#027cc4] focus:border-[#027cc4] rounded-lg shadow-sm transition-all duration-200 hover:shadow-md"
                 />
+              </div> */}
+              <div className="flex flex-col mb-8 max-w-6xl mx-auto w-full">
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1 group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#0355bb] to-[#027cc4] rounded-xl opacity-20 group-hover:opacity-30 transition-opacity blur-lg"></div>
+                <div className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-xl">
+                  <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                    <Search className="text-[#0355bb] h-5 w-5" />
+                  </div>
+                  <Input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="border-0 pl-12 pr-4 py-6 md:py-6 w-full bg-transparent placeholder:text-gray-400 focus:ring-0 text-[#0355bb]"
+                  />
+                </div>
               </div>
+              
               <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="h-11 bg-[#0355bb] text-white hover:bg-[#027cc4] border-[#0355bb] rounded-lg shadow-sm transition-all duration-200 hover:shadow-md"
-                >
-                  <SlidersHorizontal className="mr-2 h-5 w-5" />
-                  Filters
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-96 p-0 z-[100000]">
+                <SheetTrigger asChild>
+                  <Button
+                    // variant="outline"
+                    className="h-12 md:px-6 px-4 bg-[#0355bb] hover:bg-[#027cc4] text-white rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl group flex-shrink-0"
+                  >
+                    <SlidersHorizontal className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                    <span className="font-medium ml-2 hidden md:inline">Filters</span>
+                  </Button>
+                </SheetTrigger>
+              <SheetContent side="right" className="w-full sm:w-96 p-0 z-[1000000000]">
                 <SheetHeader className="p-4 border-b">
                   <SheetTitle className="text-lg font-semibold text-[#0355bb]">Filters</SheetTitle>
                 </SheetHeader>

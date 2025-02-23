@@ -22,6 +22,7 @@ import {
 import { useParams } from 'next/navigation'
 import { getSearchProducts } from '@/api'
 import Image from 'next/image'
+import { Poppins } from 'next/font/google'
 
 interface Product{
   id : number
@@ -34,6 +35,11 @@ interface Product{
   product_country : string
   product_category : string
 }
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 export default function SearchPage(){
 
@@ -164,7 +170,7 @@ export default function SearchPage(){
 
   return (
     <div 
-      className="min-h-screen w-full py-10"
+      className={`min-h-screen w-full py-10 ${poppins.className}`}
       style={{
         background: 'radial-gradient(circle at center, #027cc4 0%, #ffffff 100%)',
         backgroundAttachment: 'fixed'
