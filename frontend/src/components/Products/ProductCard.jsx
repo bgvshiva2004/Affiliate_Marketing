@@ -59,7 +59,7 @@ export default function ProductCard({ product }) {
             {product.companyName}
           </p>
           <p className="text-base font-bold text-[#0355bb]">
-            ${Number(product.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          ₹{Number(product.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
         </div>
 

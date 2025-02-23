@@ -233,7 +233,7 @@ export default function SearchPage(){
                     </div>
 
                     <p className="text-xl sm:text-2xl font-bold text-[#0355bb]">
-                      ${product.product_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ₹{product.product_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
 
                     <p className="text-sm sm:text-base text-[#0355bb]/70 line-clamp-2">

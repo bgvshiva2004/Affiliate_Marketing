@@ -13,6 +13,7 @@ const nextConfig = {
     domains: [
       'localhost',
       '127.0.0.1',
+      'affiliatemarketing-production.up.railway.app'
     ],
     remotePatterns: [
       {
@@ -20,6 +21,11 @@ const nextConfig = {
         hostname: 'localhost',
         port: '8000',
         pathname: '/media/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'affiliatemarketing-production.up.railway.app',
+        pathname: '/backend/media/**',
       },
     ],
   },
