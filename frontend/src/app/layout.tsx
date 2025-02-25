@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-
+import { Poppins } from "next/font/google";
 import { cookies } from 'next/headers';
 
 
@@ -11,6 +11,11 @@ interface ListItem {
   title: string;
   description: string;
 }
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -140,7 +145,7 @@ export default async function RootLayout({
           href="/favicon-16x16.png"
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${poppins.className}`}>
         <Navbar token={token} initialLists={initialLists} />
         {children}
       </body>

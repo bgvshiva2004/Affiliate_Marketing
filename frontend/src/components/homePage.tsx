@@ -27,6 +27,8 @@ import { ListComponent } from "./ListComponent";
 import { ModalComponent } from "./ModalComponent";
 import { ShoppingSpot } from "./ShoppingSpotComponent";
 
+import { Poppins } from "next/font/google";
+
 interface ListItem {
   id: number;
   title: string;
@@ -37,6 +39,12 @@ interface HomePageProps {
   initialToken?: string | null;
   initialLists: ListItem[];
 }
+
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 export default function HomePage({
   initialToken,
@@ -95,6 +103,7 @@ export default function HomePage({
 
       if (!response.ok) throw new Error("Failed to fetch lists");
       const newLists = await response.json();
+      newLists.sort((a: ListItem , b: ListItem) => b.id - a.id);
       setLists(newLists);
     } catch (error) {
       console.error("Error refreshing lists:", error);
@@ -131,6 +140,7 @@ export default function HomePage({
   }, []);
 
   return (
+    <div className={`${poppins.className}`}>
     <div
       className="relative min-h-screen overflow-hidden"
       style={{
@@ -145,10 +155,10 @@ export default function HomePage({
         autoClose={3000}
         style={{ 
           top: '20px',
-          zIndex: 1000000
+          zIndex: 1000000000
         }}
         toastStyle={{
-          backgroundColor: '#0355bb',
+          backgroundColor: '#2e93ce',
           color: 'white',
           borderRadius: '12px',
           boxShadow: '0 8px 16px rgba(3, 85, 187, 0.15)',
@@ -179,7 +189,7 @@ export default function HomePage({
                 ></div>
 
                 <span className="text-transparent text-3xl sm:text-4xl lg:text-5xl font-bold aura-text">
-                  AuraGen
+                  OuraGen
                 </span>
 
                 <img
@@ -236,7 +246,7 @@ export default function HomePage({
           />
         )}
 
-        <div className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 z-[1000] flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-7">
+        <div className="fixed bottom-4 sm:bottom-8 right-4 sm:right-8 z-[100000] flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-7">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -288,10 +298,10 @@ export default function HomePage({
         </div>
 
         <div 
-          className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-            isModalOpen ? 'opacity-30' : 'opacity-0 pointer-events-none'
+          className={`fixed inset-0 bg-gray-200 transition-opacity duration-300 ${
+            isModalOpen ? 'opacity-50' : 'opacity-0 pointer-events-none'
           }`} 
-          style={{ zIndex: 998 }}
+          style={{ zIndex: 1000 }}
         />
         
         <ModalComponent
@@ -371,6 +381,7 @@ export default function HomePage({
 `}</style>
 
       </div>
+    </div>
     </div>
   );
 }

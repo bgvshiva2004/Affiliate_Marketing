@@ -2,6 +2,7 @@ import { motion, useAnimation } from 'framer-motion'
 import { ChevronUp, ChevronDown } from 'lucide-react'
 import ProductsPage from '@/app/@products/ProductsPage'
 import { AnimationControls } from "framer-motion";
+import { Poppins } from 'next/font/google';
 
 interface DragEventInfo {
     offset: {
@@ -18,11 +19,16 @@ interface ShoppingSpotProps {
     className: string;
 }
 
+const poppins = Poppins({
+    subsets: ['latin'],
+    weight:"400",
+  })
+
 export const ShoppingSpot = ({ isOpen, setIsOpen, controls, handleDragEnd, toggleDrawer, className }: ShoppingSpotProps) => {
     
     return (
         <motion.div
-            className={`fixed bottom-0 left-0 right-0 shadow-lg z-[10000] ${className}`}
+            className={`fixed bottom-0 left-0 right-0 shadow-lg z-[1000000] ${className}`}
             initial={{ height: '0px' }}
             animate={{ height: isOpen ? '83vh' : '0px' }}
             // animate={controls}
@@ -34,10 +40,10 @@ export const ShoppingSpot = ({ isOpen, setIsOpen, controls, handleDragEnd, toggl
                 dragElastic={0}
                 onDragEnd={handleDragEnd}
                 onClick={toggleDrawer}
-                className="cursor-pointer active:cursor-grabbing relative z-[10000]"
+                className="cursor-pointer active:cursor-grabbing relative z-[10000000]"
             >
                 <svg
-                    className="w-full h-12 absolute bottom-0 z-[10000]"
+                    className="w-full h-12 absolute bottom-0 z-[10000000]"
                     preserveAspectRatio="none"
                     viewBox="0 0 100 12"
                     xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +59,7 @@ export const ShoppingSpot = ({ isOpen, setIsOpen, controls, handleDragEnd, toggl
                         fill="url(#custom-gradient)"
                     />
                 </svg>
-                <div className='absolute top-[-30px] flex justify-center items-center w-full z-[10000]'>
+                <div className='absolute top-[-30px] flex justify-center items-center w-full z-[10000000]'>
                     <div className="h-2 w-[50px] sm:w-[100px] rounded-full bg-white" />
                 </div>
                 {/* <div className="absolute top-2 left-1/2 transform -translate-x-1/2 text-white">

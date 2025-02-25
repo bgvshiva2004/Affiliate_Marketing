@@ -1,11 +1,17 @@
 import Homepage from '@/components/homePage'
 import { cookies } from 'next/headers'
+import { Poppins } from 'next/font/google';
 
 interface ListItem {
     id : number;
     title : string;
     description : string;
 }
+
+const poppins = Poppins({
+    subsets: ['latin'],
+    weight:"400",
+  })
 
 
 async function fetchUserLists(token: string): Promise<ListItem[]> {
@@ -25,7 +31,7 @@ async function fetchUserLists(token: string): Promise<ListItem[]> {
 
         const data = await response.json();
         // console.log('Fetched data:', data);
-        return data;
+        return data.sort((a: ListItem, b: ListItem) => b.id - a.id);
 
     }catch(error){
         console.error('Error Fetching the User Lists : ' , error);

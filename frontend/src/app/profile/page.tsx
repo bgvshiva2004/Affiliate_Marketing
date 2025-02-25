@@ -4,6 +4,8 @@ import * as Components from "@/components/LoginForm";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { 
   User, 
   KeyRound, 
@@ -17,14 +19,24 @@ import {
   ArrowLeft,
   Lock,
   UserCircle,
-  HomeIcon
+  HomeIcon,
+  Eye,
+  EyeOff
 } from "lucide-react";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 export default function Profile() {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [signIn, setSignIn] = useState<boolean>(true);
+  const [showSignInPassword, setShowSignInPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
 
   useEffect(() => {
     async function checkUserStatus() {
@@ -87,19 +99,35 @@ export default function Profile() {
         body: JSON.stringify(signUpData),
       });
 
+      const data = await response.json();
+
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   console.error("Error : ", errorData);
+      //   alert("SignUp Failed");
+      // } else {
+      //   const result = await response.json();
+      //   console.log("sign up successful : ", result);
+      //   alert("SignUp Successful. Please SignIn");
+      //   window.location.reload();
+      // }
+
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error : ", errorData);
-        alert("SignUp Failed");
+        if (data.username) {
+          toast.error(Array.isArray(data.username) ? data.username[0] : data.username);
+        } else if (data.password) {
+          toast.error(Array.isArray(data.password) ? data.password[0] : data.password);
+        } else {
+          toast.error("Sign up failed. Please check your information.");
+        }
       } else {
-        const result = await response.json();
-        console.log("sign up successful : ", result);
-        alert("SignUp Successful. Please SignIn");
-        window.location.reload();
+        toast.success("Sign up successful! Please sign in to continue.");
+        setTimeout(() => window.location.reload(), 2000);
       }
     } catch (error) {
-      console.error("Sign Up Error : ", error);
-      alert("SignUp Error!!");
+      // console.error("Sign Up Error : ", error);
+      // alert("SignUp Error!!");
+      toast.error("Unable to connect to the server. Please try again later.");
     }
   };
 
@@ -114,21 +142,44 @@ export default function Profile() {
         body: JSON.stringify(signInData),
       });
 
+      const data = await response.json();
+
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   console.error("Sign In failed ", errorData);
+      //   alert("Sign In error");
+      // } else {
+      //   const result = await response.json();
+      //   Cookies.set("access", result.access);
+      //   Cookies.set("refresh", result.refresh);
+      //   const userDetails = jwtDecode(result.access);
+      //   Cookies.set("user", JSON.stringify(userDetails));
+      //   window.location.href = "/";
+      // }
+
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Sign In failed ", errorData);
-        alert("Sign In error");
+        if (data.detail) {
+          toast.error("Invalid username or password.");
+        } else {
+          toast.error("Sign in failed. Please check your credentials.");
+        }
       } else {
-        const result = await response.json();
-        Cookies.set("access", result.access);
-        Cookies.set("refresh", result.refresh);
-        const userDetails = jwtDecode(result.access);
+        Cookies.set("access", data.access);
+        Cookies.set("refresh", data.refresh);
+        const userDetails = jwtDecode(data.access);
         Cookies.set("user", JSON.stringify(userDetails));
-        window.location.href = "/";
+        
+        toast.success("Successfully signed in!");
+        
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
       }
+      
     } catch (error) {
-      console.error("Sign In error : ", error);
-      alert("SignIn error!!");
+      // console.error("Sign In error : ", error);
+      // alert("SignIn error!!");
+      toast.error("Unable to connect to the server. Please try again later.");
     }
   };
 
@@ -138,11 +189,33 @@ export default function Profile() {
     Cookies.remove("user");
     setIsLoggedIn(false);
     setUser(null);
-    window.location.href = "/";
+    toast.success("Successfully signed out!");
+    
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
+
   };
 
   return (
-    <div className="min-h-screen w-full py-20 px-4 flex flex-col items-center justify-center bg-gradient-radial from-[#027cc4] to-white">
+    <div className={`min-h-screen w-full py-20 px-4 flex flex-col items-center justify-center bg-gradient-radial from-[#027cc4] to-white ${poppins.className}`}>
+      <ToastContainer 
+        position="top-center"
+        autoClose={3000}
+        style={{ 
+          top: '20px',
+          zIndex: 1000000
+        }}
+        toastStyle={{
+          backgroundColor: '#0355bb',
+          color: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 8px 16px rgba(3, 85, 187, 0.15)',
+          fontSize: '14px',
+          padding: '12px 24px',
+          fontWeight: '500'
+        }}
+      />
       {isLoggedIn ? (
         <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md text-center">
           <div className="mb-6 flex justify-center">
@@ -194,12 +267,19 @@ export default function Profile() {
                   <KeyRound size={16} />
                 </Components.InputIcon>
                 <Components.Input
-                  type="password"
+                  type={showSignUpPassword ? "text" : "password"}
                   placeholder="Password"
                   name="password"
                   value={signUpData.password}
                   onChange={handleSignUpChange}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowSignUpPassword(!showSignUpPassword)}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showSignUpPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </Components.InputContainer>
               <Components.InputContainer>
                 <Components.InputIcon>
@@ -255,12 +335,19 @@ export default function Profile() {
                   <Lock size={16} />
                 </Components.InputIcon>
                 <Components.Input
-                  type="password"
+                  type={showSignInPassword ? "text" : "password"}
                   placeholder="Password"
                   name="password"
                   value={signInData.password}
                   onChange={handleSignInChange}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowSignInPassword(!showSignInPassword)}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showSignInPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
               </Components.InputContainer>
               <Components.Anchor href="#">
                 <KeyRound size={14} />

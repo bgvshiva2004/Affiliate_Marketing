@@ -11,6 +11,7 @@ import ContentEditable from "react-contenteditable";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { X, Type, AlignLeft } from "lucide-react";
+import { Poppins } from "next/font/google";
 
 interface ListItem {
   id: number;
@@ -30,6 +31,11 @@ interface ModalComponentProps {
   editingItem: ListItem | null;
   onItemSaved: (item: ListItem) => void;
 }
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight:"400",
+})
 
 const processContent = (content: string) => {
   return content
@@ -131,6 +137,7 @@ export const ModalComponent = ({
   };
 
   return (
+    <div className={`${poppins.className}`}>
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg w-[95%] mx-auto max-h-[90vh] !z-[1000000] bg-white/95 backdrop-blur-md rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/20">
         <DialogHeader className="relative border-b border-gray-100 pb-4">
@@ -213,5 +220,6 @@ export const ModalComponent = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </div>
   );
 };

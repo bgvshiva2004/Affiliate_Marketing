@@ -22,10 +22,18 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 from django.db.models import Q
+from collections import OrderedDict
+from rest_framework.authentication import get_authorization_header
+from rest_framework.exceptions import AuthenticationFailed
+
+from rest_framework.authentication import get_authorization_header
+from rest_framework.exceptions import AuthenticationFailed
+from django.db.models import Q
 
 class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
-
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
     def get_queryset(self):
         print(self.request.user)
         queryset = ProductLinks.objects.all()
@@ -39,31 +47,26 @@ class ProductLinksAPI(ListAPIView):
 
         # Use GroqAgent to expand search terms if search_query exists
         if search_query:
-            # Get expanded search terms from GroqAgent
             expanded_terms = get_products_from_list(
                 title=search_query,
                 description=search_query,
                 hobbies=None,
                 age=None
             )
-            
-            # Create a combined Q object for all search terms
+
             query_filter = Q()
-            
-            # Add original search terms
             for word in search_query.split():
                 query_filter |= (
                     Q(product_name__icontains=word) |
                     Q(product_description__icontains=word)
                 )
-            
-            # Add expanded search terms
+
             for term in expanded_terms:
                 query_filter |= (
                     Q(product_name__icontains=term) |
                     Q(product_description__icontains=term)
                 )
-            
+
             queryset = queryset.filter(query_filter)
 
         # Filter by product ID
@@ -83,24 +86,38 @@ class ProductLinksAPI(ListAPIView):
                 price_filters &= Q(product_price__lte=max_price)
             queryset = queryset.filter(price_filters)
 
-        # Handle recommended products for authenticated users
-        if self.request.user.is_authenticated:
+        # Check if token is present in the request headers
+        auth_header = get_authorization_header(self.request).decode('utf-8')
+        if not auth_header:
+            print("No authentication token found, returning all products.")
+            return queryset.distinct()
+
+        # Validate token and extract user
+        try:
+            user = self.request.user
+            print("user",user)
+            # Handle recommended products for authenticated users
             try:
-                user_profile = UserProfile.objects.get(user=self.request.user)
+                user_profile = UserProfile.objects.get(user=user)
                 recommended_products = user_profile.recommended_products.all()
-                recommended_ids = recommended_products.values_list('id', flat=True)
-                non_recommended_products = queryset.exclude(id__in=recommended_ids)
-                
-                # Combine recommended and non-recommended products
-                final_queryset = (
-                    recommended_products.distinct() | non_recommended_products.distinct()
-                )
-                return final_queryset
+                recommended_ids = set(recommended_products.values_list('id', flat=True))
+
+                recommended_queryset = list(recommended_products)
+                non_recommended_queryset = [p for p in queryset if p.id not in recommended_ids]
+
+                ordered_queryset = recommended_queryset + non_recommended_queryset
+                return ordered_queryset
 
             except UserProfile.DoesNotExist:
                 print("User profile not found, returning all products.")
 
+        except AuthenticationFailed as e:
+            print(f"Authentication error: {e}")
+            return queryset.distinct()
+
         return queryset.distinct()
+
+
 
 
 
