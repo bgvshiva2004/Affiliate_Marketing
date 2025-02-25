@@ -74,6 +74,7 @@ export default function SearchPage(){
     try {
       setLoading(true)
       const results = await getSearchProducts(decodeURIComponent(searchQuery), null, {})
+      console.log(results);
       setAllProducts(results)
       setFilteredProducts(results)
     } catch (err) {
@@ -87,6 +88,8 @@ export default function SearchPage(){
   useEffect(() => {
     if (searchQuery) {
       loadProducts()
+      console.log(allProducts);
+      console.log(filteredProducts);
     }
   }, [searchQuery])
 
