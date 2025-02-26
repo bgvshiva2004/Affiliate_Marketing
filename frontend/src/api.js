@@ -1,4 +1,5 @@
   const BASE_URL = "https://affiliatemarketing-production.up.railway.app/backend" + '/api/v1';
+  // const BASE_URL = "http://127.0.0.1:8000/backend" + '/api/v1';
 
   async function apiCall(endpoint, params = {}, token = null, options = {}) {
     const url = `${BASE_URL}/${endpoint}/`;
@@ -66,6 +67,7 @@
       q: params.searchTerm,
       ...params
     }
+
     return apiCall('products', normalizedParams, token, options);
   }
 

@@ -18,6 +18,7 @@ import { Search, SlidersHorizontal, Tag, Globe, Monitor, DollarSign, X } from 'l
 import { getAllProducts } from "@/api";
 import Footer from "@/components/footer";
 import { Poppins } from "next/font/google";
+import Cookies from "js-cookie";
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -39,7 +40,9 @@ export default function ProductsPage() {
   const loadProducts = async (filters = {}) => {
     try {
       setLoading(true);
-      const data = await getAllProducts(null, {
+      const token = Cookies.get("access")
+      console.log("token : ", token)
+      const data = await getAllProducts(token, {
         searchTerm: searchTerm,
         categories: selectedCategories,
         countries: selectedCountries,
@@ -49,6 +52,7 @@ export default function ProductsPage() {
         ...filters,
       });
       setProducts(data);
+      console.log("data : ", data)
     } catch (error) {
       console.error("Error loading products:", error);
       setError("Failed to load products");

@@ -135,6 +135,7 @@ export default function Profile() {
     e.preventDefault();
     try {
       const response = await fetch("https://affiliatemarketing-production.up.railway.app/backend/api/v1/token/", {
+      // const response = await fetch("http://127.0.0.1:8000/backend/api/v1/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
