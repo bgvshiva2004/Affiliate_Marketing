@@ -53,6 +53,18 @@ export default function ProductsPage() {
       });
       setProducts(data);
       console.log("data : ", data)
+
+      // Store product names in localStorage for search suggestions
+      if (data && data.length > 0) {
+        // Extract unique product names
+        const productNames = [...new Set(data.map(product => product.product_name))];
+        
+        // Store in localStorage with a max of 100 items to prevent excessive storage usage
+        localStorage.setItem('productSuggestions', JSON.stringify(
+          productNames.slice(0, 100)
+        ));
+      }
+      
     } catch (error) {
       console.error("Error loading products:", error);
       setError("Failed to load products");
@@ -207,18 +219,6 @@ export default function ProductsPage() {
     >
       <div className="flex-1 overflow-hidden">
         <div id="ProductsPage" className="h-full flex flex-col px-4 py-6">
-          {/* <div className="flex flex-col mb-6">
-            <div className="flex items-center space-x-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 h-11 bg-white border-[#0355bb] focus:ring-[#027cc4] focus:border-[#027cc4] rounded-lg shadow-sm transition-all duration-200 hover:shadow-md"
-                />
-              </div> */}
               <div className="flex flex-col mb-8 max-w-6xl mx-auto w-full">
             <div className="flex items-center gap-3">
               <div className="relative flex-1 group">
