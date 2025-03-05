@@ -71,6 +71,8 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+        <meta name='impact-site-verification' value='8255de2a-28d6-413d-9513-268ea5ec52a2' />#impact.com
+          (function(i,m,p,a,c,t){c.ire_o=p;c[p]=c[p]||function(){(c[p].a=c[p].a||[]).push(arguments)};t=a.createElement(m);var z=a.getElementsByTagName(m)[0];t.async=1;t.src=i;z.parentNode.insertBefore(t,z)})('https://utt.impactcdn.com/P-A6096136-034b-4566-9f49-8fac6d2594021.js','script','impactStat',document,window);impactStat('transformLinks');impactStat('trackImpression');
         <meta name="subject" content="OuraGen" />
         <meta
           name="description"
@@ -143,8 +145,7 @@ export default async function RootLayout({
           type="image/png"
           sizes="16x16"
           href="/favicon-16x16.png"
-        /><meta name='impact-site-verification' value='8255de2a-28d6-413d-9513-268ea5ec52a2' />#impact.com
-          (function(i,m,p,a,c,t){c.ire_o=p;c[p]=c[p]||function(){(c[p].a=c[p].a||[]).push(arguments)};t=a.createElement(m);var z=a.getElementsByTagName(m)[0];t.async=1;t.src=i;z.parentNode.insertBefore(t,z)})('https://utt.impactcdn.com/P-A6096136-034b-4566-9f49-8fac6d2594021.js','script','impactStat',document,window);impactStat('transformLinks');impactStat('trackImpression');
+        />
       </head>
       <body className={`${poppins.className}`}>
         <Navbar token={token} initialLists={initialLists} />
