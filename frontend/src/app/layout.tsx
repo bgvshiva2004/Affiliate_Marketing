@@ -143,7 +143,7 @@ export default async function RootLayout({
           type="image/png"
           sizes="16x16"
           href="/favicon-16x16.png"
-        />
+        /><meta name='impact-site-verification' value='8255de2a-28d6-413d-9513-268ea5ec52a2'>#impact.com
       </head>
       <body className={`${poppins.className}`}>
         <Navbar token={token} initialLists={initialLists} />
