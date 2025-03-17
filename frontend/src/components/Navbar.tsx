@@ -329,18 +329,23 @@ export default function Navbar({ token, initialLists }: NavbarProps) {
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            {/* Logo */}
+            {/* Logo - Modified for mobile view */}
             <div className="flex justify-start lg:w-0 lg:flex-1">
               <Link href="/" className="flex items-center space-x-2 transition-colors duration-300">
-                <BookOpen className="h-6 w-6 text-[#0355bb]" />
-                <span className="text-xl font-bold text-[#0355bb] hover:text-black transition-colors duration-300">
+                <img
+                  src="/images/temp_logo2.png"
+                  alt="Logo"
+                  className="h-10 md:h-10 w-auto object-contain transform hover:scale-105 transition-transform duration-300"
+                  style={{ height: '40px' }}
+                />
+                <span className="hidden md:inline text-xl font-bold text-[#0355bb] hover:text-black transition-colors duration-300">
                   OuraGen
                 </span>
               </Link>
             </div>
 
-            {/* Mobile Search Bar */}
-            <div className="flex md:hidden flex-1 mx-4">
+            {/* Mobile Search Bar - Increased width */}
+            <div className="flex md:hidden flex-1 mx-1">
               <form onSubmit={handleSearch} className="w-full">
                 <div className="relative">
                   <Input
