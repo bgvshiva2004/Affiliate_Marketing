@@ -247,12 +247,12 @@ export default function ProductsPage() {
                     <span className="font-medium ml-2 hidden md:inline">Filters</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-full sm:w-96 p-0 z-[1000000000]">
+                <SheetContent side="right" className="w-full sm:w-96 p-0 z-[1000000000] filters" >
                   <SheetHeader className="p-4 border-b">
                     <SheetTitle className="text-lg font-semibold text-[#0355bb]">Filters</SheetTitle>
                   </SheetHeader>
 
-                  <div id="scroll-area" className="filters">
+                  <div id="scroll-area">
                     <ScrollArea className="h-[calc(100vh-150px)]">
                       <div className="p-4 space-y-6">
                         {/* Categories */}
@@ -388,7 +388,7 @@ export default function ProductsPage() {
                   </div>
 
                   {/* Filter Actions */}
-                  <div className="p-4 bg-white">
+                  <div className="p-4 bg-white" >
                     <div className="grid grid-cols-2 gap-2">
                       <Button
                         variant="outline"
