@@ -142,7 +142,7 @@ export const ModalComponent = ({
       <DialogContent className="sm:max-w-lg w-[95%] mx-auto max-h-[90vh] !z-[1000000] bg-white/95 backdrop-blur-md rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/20">
         <DialogHeader className="relative border-b border-gray-100 pb-4">
           <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-[#0355bb] pl-1">
-            <div className="p-1.5 rounded-lg bg-[#0355bb]/10">
+            <div className="p-1.5 rounded-lg bg-white">
               {editingItem ? (
                 <Type className="w-5 h-5 text-[#0355bb]" />
               ) : (

@@ -34,9 +34,12 @@ class ProductLinksAPI(ListAPIView):
     serializer_class = ProductLinksSerializers
     authentication_classes = [JWTAuthentication]
     permission_classes = [AllowAny]
+    print("called")
     def get_queryset(self):
+        print(self)
         print(self.request.user)
         queryset = ProductLinks.objects.all()
+        print("hello")
 
         # Get search parameters
         search_query = self.request.query_params.get('q', None)
@@ -114,6 +117,8 @@ class ProductLinksAPI(ListAPIView):
         except AuthenticationFailed as e:
             print(f"Authentication error: {e}")
             return queryset.distinct()
+        
+        print(queryset)
 
         return queryset.distinct()
 

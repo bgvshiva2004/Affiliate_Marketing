@@ -18,10 +18,11 @@ import { Search, SlidersHorizontal, Tag, Globe, Monitor, DollarSign, X } from 'l
 import { getAllProducts } from "@/api";
 import Footer from "@/components/footer";
 import { Poppins } from "next/font/google";
+import Cookies from "js-cookie";
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight:"400",
+  weight: "400",
 })
 
 export default function ProductsPage() {
@@ -39,7 +40,9 @@ export default function ProductsPage() {
   const loadProducts = async (filters = {}) => {
     try {
       setLoading(true);
-      const data = await getAllProducts(null, {
+      const token = Cookies.get("access")
+      console.log("token : ", token)
+      const data = await getAllProducts(token, {
         searchTerm: searchTerm,
         categories: selectedCategories,
         countries: selectedCountries,
@@ -49,6 +52,7 @@ export default function ProductsPage() {
         ...filters,
       });
       setProducts(data);
+      console.log("data : ", data)
     } catch (error) {
       console.error("Error loading products:", error);
       setError("Failed to load products");
@@ -215,7 +219,7 @@ export default function ProductsPage() {
                   className="pl-10 pr-4 h-11 bg-white border-[#0355bb] focus:ring-[#027cc4] focus:border-[#027cc4] rounded-lg shadow-sm transition-all duration-200 hover:shadow-md"
                 />
               </div> */}
-              <div className="flex flex-col mb-8 max-w-6xl mx-auto w-full">
+          <div className="flex flex-col mb-8 max-w-6xl mx-auto w-full">
             <div className="flex items-center gap-3">
               <div className="relative flex-1 group">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0355bb] to-[#027cc4] rounded-xl opacity-20 group-hover:opacity-30 transition-opacity blur-lg"></div>
@@ -232,175 +236,177 @@ export default function ProductsPage() {
                   />
                 </div>
               </div>
-              
+
               <Sheet>
                 <SheetTrigger asChild>
                   <Button
                     // variant="outline"
-                    className="h-12 md:px-6 px-4 bg-[#0355bb] hover:bg-[#027cc4] text-white rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl group flex-shrink-0"
+                    className="h-12 md:px-6 px-4 bg-[#0355b bg-[#027cc4] text-white rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl group flex-shrink-0"
                   >
                     <SlidersHorizontal className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                     <span className="font-medium ml-2 hidden md:inline">Filters</span>
                   </Button>
                 </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-96 p-0 z-[1000000000]">
-                <SheetHeader className="p-4 border-b">
-                  <SheetTitle className="text-lg font-semibold text-[#0355bb]">Filters</SheetTitle>
-                </SheetHeader>
-                
-                <ScrollArea className="h-[calc(100vh-150px)]">
-                  <div className="p-4 space-y-6">
-                    {/* Categories */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[#0355bb]">
-                        <Tag className="h-4 w-4" />
-                        <h3 className="font-semibold">Categories</h3>
-                      </div>
-                      <div className="space-y-1.5">
-                        {categories.map((category) => (
-                          <div
-                            key={category.name}
-                            className="flex items-center"
-                          >
-                            <Checkbox 
-                              id={`category-${category.name}`} 
-                              checked={selectedCategories.includes(category.name)}
-                              onCheckedChange={() => handleCategoryChange(category.name)}
-                              className="border-[#0355bb] text-[#0355bb]"
-                            />
-                            <Label 
-                              htmlFor={`category-${category.name}`} 
-                              className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
-                            >
-                              {category.name}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                <SheetContent side="right" className="w-full sm:w-96 p-0 z-[1000000000]">
+                  <SheetHeader className="p-4 border-b">
+                    <SheetTitle className="text-lg font-semibold text-[#0355bb]">Filters</SheetTitle>
+                  </SheetHeader>
 
-                    {/* Platforms */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[#0355bb]">
-                        <Monitor className="h-4 w-4" />
-                        <h3 className="font-semibold">Platforms</h3>
-                      </div>
-                      <div className="space-y-1.5">
-                        {uniquePlatforms.map((platform) => (
-                          <div
-                            key={platform}
-                            className="flex items-center"
-                          >
-                            <Checkbox
-                              id={`platform-${platform}`} 
-                              checked={selectedPlatforms.includes(platform)}
-                              onCheckedChange={() => handlePlatformChange(platform)}
-                              className="border-[#0355bb] text-[#0355bb]"
-                            />
-                            <Label 
-                              htmlFor={`platform-${platform}`} 
-                              className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
-                            >
-                              {platform}
-                            </Label>
+                  <div id="scroll-area">
+                    <ScrollArea className="h-[calc(100vh-150px)]">
+                      <div className="p-4 space-y-6">
+                        {/* Categories */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-[#0355bb]">
+                            <Tag className="h-4 w-4" />
+                            <h3 className="font-semibold">Categories</h3>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Countries */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[#0355bb]">
-                        <Globe className="h-4 w-4" />
-                        <h3 className="font-semibold">Countries</h3>
-                      </div>
-                      <div className="space-y-1.5">
-                        {uniqueCountries.map((country) => (
-                          <div
-                            key={country}
-                            className="flex items-center"
-                          >
-                            <Checkbox
-                              id={`country-${country}`} 
-                              checked={selectedCountries.includes(country)}
-                              onCheckedChange={() => handleCountryChange(country)}
-                              className="border-[#0355bb] text-[#0355bb]"
-                            />
-                            <Label 
-                              htmlFor={`country-${country}`} 
-                              className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
-                            >
-                              {country}
-                            </Label>
+                          <div className="space-y-1.5">
+                            {categories.map((category) => (
+                              <div
+                                key={category.name}
+                                className="flex items-center"
+                              >
+                                <Checkbox
+                                  id={`category-${category.name}`}
+                                  checked={selectedCategories.includes(category.name)}
+                                  onCheckedChange={() => handleCategoryChange(category.name)}
+                                  className="border-[#0355bb] text-[#0355bb]"
+                                />
+                                <Label
+                                  htmlFor={`category-${category.name}`}
+                                  className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
+                                >
+                                  {category.name}
+                                </Label>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Price Range */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[#0355bb]">
-                        <DollarSign className="h-4 w-4" />
-                        <h3 className="font-semibold">Price Range</h3>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div>
-                          <Label 
-                            htmlFor="minPrice" 
-                            className="text-xs text-[#0355bb]/70"
-                          >
-                            Min Price
-                          </Label>
-                          <Input
-                            id="minPrice"
-                            type="number"
-                            placeholder=""
-                            value={minPrice}
-                            onChange={(e) => setMinPrice(e.target.value)}
-                            className="h-9 border-[#0355bb]/20 focus:border-[#0355bb] focus:ring-[#0355bb]"
-                          />
                         </div>
-                        <div>
-                          <Label 
-                            htmlFor="maxPrice" 
-                            className="text-xs text-[#0355bb]/70"
-                          >
-                            Max Price
-                          </Label>
-                          <Input
-                            id="maxPrice"
-                            type="number"
-                            placeholder=""
-                            value={maxPrice}
-                            onChange={(e) => setMaxPrice(e.target.value)}
-                            className="h-9 border-[#0355bb]/20 focus:border-[#0355bb] focus:ring-[#0355bb]"
-                          />
+
+                        {/* Platforms */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-[#0355bb]">
+                            <Monitor className="h-4 w-4" />
+                            <h3 className="font-semibold">Platforms</h3>
+                          </div>
+                          <div className="space-y-1.5">
+                            {uniquePlatforms.map((platform) => (
+                              <div
+                                key={platform}
+                                className="flex items-center"
+                              >
+                                <Checkbox
+                                  id={`platform-${platform}`}
+                                  checked={selectedPlatforms.includes(platform)}
+                                  onCheckedChange={() => handlePlatformChange(platform)}
+                                  className="border-[#0355bb] text-[#0355bb]"
+                                />
+                                <Label
+                                  htmlFor={`platform-${platform}`}
+                                  className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
+                                >
+                                  {platform}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Countries */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-[#0355bb]">
+                            <Globe className="h-4 w-4" />
+                            <h3 className="font-semibold">Countries</h3>
+                          </div>
+                          <div className="space-y-1.5">
+                            {uniqueCountries.map((country) => (
+                              <div
+                                key={country}
+                                className="flex items-center"
+                              >
+                                <Checkbox
+                                  id={`country-${country}`}
+                                  checked={selectedCountries.includes(country)}
+                                  onCheckedChange={() => handleCountryChange(country)}
+                                  className="border-[#0355bb] text-[#0355bb]"
+                                />
+                                <Label
+                                  htmlFor={`country-${country}`}
+                                  className="ml-2 text-sm text-[#0355bb]/80 cursor-pointer"
+                                >
+                                  {country}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Price Range */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-[#0355bb]">
+                            <DollarSign className="h-4 w-4" />
+                            <h3 className="font-semibold">Price Range</h3>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div>
+                              <Label
+                                htmlFor="minPrice"
+                                className="text-xs text-[#0355bb]/70"
+                              >
+                                Min Price
+                              </Label>
+                              <Input
+                                id="minPrice"
+                                type="number"
+                                placeholder=""
+                                value={minPrice}
+                                onChange={(e) => setMinPrice(e.target.value)}
+                                className="h-9 border-[#0355bb]/20 focus:border-[#0355bb] focus:ring-[#0355bb]"
+                              />
+                            </div>
+                            <div>
+                              <Label
+                                htmlFor="maxPrice"
+                                className="text-xs text-[#0355bb]/70"
+                              >
+                                Max Price
+                              </Label>
+                              <Input
+                                id="maxPrice"
+                                type="number"
+                                placeholder=""
+                                value={maxPrice}
+                                onChange={(e) => setMaxPrice(e.target.value)}
+                                className="h-9 border-[#0355bb]/20 focus:border-[#0355bb] focus:ring-[#0355bb]"
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </ScrollArea>
                   </div>
-                </ScrollArea>
 
                   {/* Filter Actions */}
-                <div className="p-4 bg-white">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={clearFilters}
-                      className="border-[#0355bb] text-[#0355bb] hover:bg-[#0355bb]/10"
-                    >
-                      Clear All
-                    </Button>
-                    <Button
-                      onClick={applyFilters}
-                      className="bg-[#0355bb] hover:bg-[#027cc4] text-white"
-                    >
-                      Apply Filters
-                    </Button>
+                  <div className="p-4 bg-white">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={clearFilters}
+                        className="border-[#0355bb] text-[#0355bb] hover:bg-[#0355bb]/10"
+                      >
+                        Clear All
+                      </Button>
+                      <Button
+                        onClick={applyFilters}
+                        className="bg-[#0355bb] hover:bg-[#027cc4] text-white"
+                      >
+                        Apply Filters
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
 
