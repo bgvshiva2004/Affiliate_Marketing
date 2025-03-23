@@ -193,9 +193,9 @@ export default function HomePage({
                 </span>
 
                 <img
-                  src="/images/logo.png"
+                  src="/images/temp_logo2.png"
                   alt="Logo"
-                  className="max-w-[60%] max-h-[60%] object-contain transform hover:scale-105 transition-transform duration-300"
+                  className="max-w-[75%] max-h-[75%] object-contain transform hover:scale-105 transition-transform duration-300"
                 />
 
                 <span className="text-white text-sm sm:text-base lg:text-lg text-center font-medium tracking-wide">

@@ -71,7 +71,6 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
-        <meta name="subject" content="OuraGen" />
         <meta
           name="description"
           content="Discover the ultimate ease in the shopping via various platforms through a single interface."
